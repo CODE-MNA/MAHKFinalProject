@@ -1,5 +1,6 @@
 ﻿using MAHKFinalProject.DrawableComponents;
 using MAHKFinalProject.GameComponents;
+using MAHKFinalProject.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

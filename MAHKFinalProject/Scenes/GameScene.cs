@@ -9,24 +9,28 @@ namespace MAHKFinalProject.Scenes
 {
     public class GameScene : DrawableGameComponent
     {
-        protected List<GameComponent> GameComponents = new List<GameComponent>();
+
+        public List<GameComponent> GameComponents { get; set; }
+
+        // constructor
         public GameScene(Game game) : base(game)
         {
-            game.Components.Add(this);
-            Hide();
+            GameComponents = new List<GameComponent>();
+            hide();
         }
 
-        public void Hide()
+        // visible
+        public virtual void show()
         {
-            Visible = false;
-            Enabled = false;
-
+            this.Visible = true;
+            this.Enabled = true;
         }
-        public void Show()
-        {
-            Visible = true;
-            Enabled = true;
 
+        // hide
+        public virtual void hide()
+        {
+            this.Visible = false;
+            this.Enabled = false;
         }
 
         public override void Initialize()
@@ -45,36 +49,31 @@ namespace MAHKFinalProject.Scenes
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-
-            foreach (var item in GameComponents)
+            DrawableGameComponent component = null;
+            foreach (GameComponent gc in GameComponents)
             {
-                if (item is DrawableGameComponent)
+                if (gc is DrawableGameComponent)
                 {
-                    DrawableGameComponent component = (DrawableGameComponent)item;
+                    component = (DrawableGameComponent)gc;
                     if (component.Visible)
                     {
-
                         component.Draw(gameTime);
                     }
                 }
             }
-
-
         }
 
         public override void Update(GameTime gameTime)
         {
-
             base.Update(gameTime);
-            foreach (var item in GameComponents)
+
+            foreach (GameComponent gc in GameComponents)
             {
-                if (item.Enabled)
+                if (gc.Enabled)
                 {
-                    item.Update(gameTime);
+                    gc.Update(gameTime);
                 }
             }
-
-
         }
     }
 }

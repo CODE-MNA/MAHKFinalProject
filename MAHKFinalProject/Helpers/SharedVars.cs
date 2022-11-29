@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MAHKFinalProject
+namespace MAHKFinalProject.Helpers
 {
     public static class SharedVars
     {
-        public static Vector2 STAGE;
+        public static Vector2 STAGE { get; set; }
     }
 }
