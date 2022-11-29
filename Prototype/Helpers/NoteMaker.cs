@@ -14,7 +14,7 @@ namespace Prototype.Helpers
 {
     public class NoteMaker : GameComponent
     {
-        List<Note> _notes;
+        List<NoteData> _notes;
         SongStage _songStage;
         KeyboardState _oldState;
 
@@ -23,7 +23,7 @@ namespace Prototype.Helpers
         public NoteMaker(Game game,SongStage ss) : base(game)
         {
             _songStage = ss;
-            _notes = new List<Note>();
+            _notes = new List<NoteData>();
 
             _levelFileHandler = new LevelFileHandler(new RythmSerializer());
         }
@@ -50,7 +50,7 @@ namespace Prototype.Helpers
 
             float beat = _songStage.GetQuantizedBeat();
 
-            _notes.Add(new Note()
+            _notes.Add(new NoteData()
             {
                 Count = 1,
                 Beat = beat,

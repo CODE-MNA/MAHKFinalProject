@@ -8,12 +8,12 @@ namespace Prototype.Rythm
 {
 
     //Maybe change to Wave
-    public struct Note
+    public struct NoteData
     {
         public int Count;
         public float Beat;
         
-        public Note(float beat, int count = 1)
+        public NoteData(float beat, int count = 1)
         {
             Count = count;
             Beat = beat;

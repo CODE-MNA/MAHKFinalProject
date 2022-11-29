@@ -23,20 +23,20 @@ namespace Prototype.Managers
         }
         Song _song;
         float bpm = 69f;
-        List<Note> _notes;
+        List<NoteData> _notes;
         ExplosionAnimation _noteInstance;
         Game g;
         float preNoteTime = 1f;
-        Dictionary<float, Note> _notesDict;
+        Dictionary<float, NoteData> _notesDict;
         LevelFileHandler _fileHandler;
         public SongStage(Game game,Song song,string stageName, ExplosionAnimation noteInstance) :base(game)
         {
             g = game;
             _stageName = stageName;
             _song = song;
-            _notesDict = new Dictionary<float, Note>();
+            _notesDict = new Dictionary<float, NoteData>();
             _noteInstance = noteInstance;
-            _notes = new List<Note>();
+            _notes = new List<NoteData>();
 
             _fileHandler = new LevelFileHandler(new RythmSerializer());
 
@@ -64,7 +64,7 @@ namespace Prototype.Managers
 
         public override void Update(GameTime gameTime)
         {
-            if(_notesDict.TryGetValue(GetQuantizedBeat()  ,out Note newNote))
+            if(_notesDict.TryGetValue(GetQuantizedBeat()  ,out NoteData newNote))
             {
                 for (int i = 0; i < newNote.Count; i++)
                 {

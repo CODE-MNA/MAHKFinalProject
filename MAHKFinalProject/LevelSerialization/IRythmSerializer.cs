@@ -1,4 +1,5 @@
-﻿using Prototype.Rythm;
+﻿using MAHKFinalProject.LevelSerialization;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Prototype.Serialization
 {
     public interface IRythmSerializer
     {
-        string Serialize(List<NoteData> notes);
-        List<NoteData> Deserialize(string notesAsString);
+        string Serialize(BeatLevel level);
+        BeatLevel Deserialize(string notesAsString);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Prototype.Rythm;
+﻿using MAHKFinalProject.LevelSerialization;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,7 @@ namespace Prototype.Serialization
             _serializer = serializer;
         }
 
-        public void SaveRythmToFile(string fileName,List<NoteData>rythm)
+        public void SaveRythmToFile(string fileName,BeatLevel rythm)
         {
             
 
@@ -32,7 +33,7 @@ namespace Prototype.Serialization
 
         }
 
-        public List<NoteData> LoadRythmFromFile(string fileName)
+        public BeatLevel LoadRythmFromFile(string fileName)
         {
             string parsed;
             using (StreamReader reader = new StreamReader($"{PATH}{fileName}"))

@@ -29,6 +29,19 @@ namespace MAHKFinalProject.Scenes
 
         }
 
+        public override void Initialize()
+        {
+            base.LoadContent();
+            foreach (var item in GameComponents)
+            {
+                if (item is DrawableGameComponent)
+                {
+                    item.Initialize();
+                }
+            }
+
+        }
+
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
