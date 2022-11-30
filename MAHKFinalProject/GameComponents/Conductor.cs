@@ -20,16 +20,18 @@ namespace MAHKFinalProject.GameComponents
         Song _song;
         float _bpm;
 
-        BeatLevel _level;
+     
 
-        public Conductor(Game game, string stageName, Song song, float bpm, BeatLevel level) : base(game)
+        public Conductor(Game game, string stageName, Song song, float bpm) : base(game)
         {
             StageName = stageName;
         
             _song = song;
             this._bpm = bpm;
-            _level = level;
+        
         }
+
+        
 
         public void PlayFromStart()
         {
@@ -52,6 +54,11 @@ namespace MAHKFinalProject.GameComponents
         public double GetSongSeconds()
         {
             return MediaPlayer.PlayPosition.TotalSeconds;
+        }
+
+        public double GetSecondsFromBeat(float beat)
+        {
+            return beat * 60 / _bpm;
         }
     }
 }

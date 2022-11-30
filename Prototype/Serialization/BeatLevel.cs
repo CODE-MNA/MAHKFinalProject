@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MAHKFinalProject.LevelSerialization
+namespace Prototype.Serialization
 {
     public class BeatLevel
     {

@@ -16,18 +16,19 @@ namespace MAHKFinalProject.Scenes
         public GameScene(Game game) : base(game)
         {
             GameComponents = new List<GameComponent>();
-            hide();
+            game.Components.Add(this);
+            Hide();
         }
 
         // visible
-        public virtual void show()
+        public virtual void Show()
         {
             this.Visible = true;
             this.Enabled = true;
         }
 
         // hide
-        public virtual void hide()
+        public virtual void Hide()
         {
             this.Visible = false;
             this.Enabled = false;

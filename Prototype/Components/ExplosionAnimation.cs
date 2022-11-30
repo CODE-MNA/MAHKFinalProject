@@ -69,7 +69,7 @@ namespace Prototype.Components
             if (frameIndex >= frames.Count)
             {
                 this.Enabled = false;
-                frameIndex = frames.Count - 1;
+              
             }
 
             base.Update(gameTime);

@@ -13,7 +13,7 @@ namespace MAHKFinalProject.Scenes
     {
         private SpriteBatch _spriteBatch;
         private MenuComponent _menuComponent;
-        private string[] _menuItems = { "Start - Level Select", "Help", "About", "Exit" };
+        private string[] _menuItems = { "Start - Level Select", "Help", "About", "Exit" , "Test" };
 
         public MenuComponent MenuComponent { get => _menuComponent; }
 

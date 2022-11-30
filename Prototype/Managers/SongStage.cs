@@ -23,21 +23,23 @@ namespace Prototype.Managers
         }
         Song _song;
         float bpm = 69f;
-        List<NoteData> _notes;
+        BeatLevel _notes;
         ExplosionAnimation _noteInstance;
         Game g;
         float preNoteTime = 1f;
-        Dictionary<float, NoteData> _notesDict;
+       
+
+        HashSet<float> times = new HashSet<float>();
         LevelFileHandler _fileHandler;
         public SongStage(Game game,Song song,string stageName, ExplosionAnimation noteInstance) :base(game)
         {
             g = game;
             _stageName = stageName;
             _song = song;
-            _notesDict = new Dictionary<float, NoteData>();
+         
             _noteInstance = noteInstance;
-            _notes = new List<NoteData>();
-
+            _notes = new BeatLevel();
+            _notes.NoteList = new List<float>();
             _fileHandler = new LevelFileHandler(new RythmSerializer());
 
             try
@@ -46,13 +48,14 @@ namespace Prototype.Managers
                 _notes = _fileHandler.LoadRythmFromFile(_stageName);
             }catch (Exception ex)
             {
-                //throw new Exception("Couldn't Load File using Stage Name : " + ex.Message);
                 
             }
 
-            foreach (var item in _notes)
+            
+
+            foreach (var item in _notes.NoteList)
             {
-                _notesDict.TryAdd(item.Beat, item);
+                times.Add(item);
             }
             
         }
@@ -64,13 +67,10 @@ namespace Prototype.Managers
 
         public override void Update(GameTime gameTime)
         {
-            if(_notesDict.TryGetValue(GetQuantizedBeat()  ,out NoteData newNote))
+            if(times.TryGetValue(GetQuantizedBeat() , out float time))
             {
-                for (int i = 0; i < newNote.Count; i++)
-                {
-                    GenerateNote();
-                    _notesDict.Remove(GetQuantizedBeat() );
-                }
+                GenerateNote();
+                times.Remove(GetQuantizedBeat());   
             }
             base.Update(gameTime);
         }

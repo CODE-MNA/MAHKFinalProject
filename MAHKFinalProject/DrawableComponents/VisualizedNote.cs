@@ -1,4 +1,5 @@
-﻿using MAHKFinalProject.RhythmComponents;
+﻿using MAHKFinalProject.GameComponents;
+using MAHKFinalProject.RhythmComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,13 +16,19 @@ namespace MAHKFinalProject.DrawableComponents
 
         public Vector2 _position;
 
-        protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Texture2D texture) : base(game)
+        protected Conductor _conductor;
+        private readonly float PRE_DELAY = 0.125f;
+
+        protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor) : base(game)
         {
-            _texture = texture;
+           
             HitBeat = hitBeat;
             Status = NoteStatus.NotSpawned;
             this.Visible = false;
+            this.Enabled = true;
             _position = spawnPosition;
+            _conductor = conductor;
+            
         }
 
         #region Transitions
@@ -45,7 +52,17 @@ namespace MAHKFinalProject.DrawableComponents
 
 
 
-        public abstract void UpdateNotSpawned(GameTime gameTime);
+        public virtual void UpdateNotSpawned(GameTime gameTime)
+        {
+          
+
+            if(HitBeat == _conductor.GetQuantizedBeat() + PRE_DELAY)
+            {
+                SpawnNote();
+                
+            }
+
+        }
         public abstract void UpdateSpawned(GameTime gameTime);
         public abstract void UpdateActive(GameTime gameTime);
 

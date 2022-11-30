@@ -14,7 +14,7 @@ namespace Prototype.Helpers
 {
     public class NoteMaker : GameComponent
     {
-        List<NoteData> _notes;
+        BeatLevel _beatLevel;
         SongStage _songStage;
         KeyboardState _oldState;
 
@@ -23,7 +23,10 @@ namespace Prototype.Helpers
         public NoteMaker(Game game,SongStage ss) : base(game)
         {
             _songStage = ss;
-            _notes = new List<NoteData>();
+            _beatLevel = new BeatLevel()
+            {
+                NoteList = new List<float>()
+           };
 
             _levelFileHandler = new LevelFileHandler(new RythmSerializer());
         }
@@ -49,21 +52,20 @@ namespace Prototype.Helpers
           
 
             float beat = _songStage.GetQuantizedBeat();
-
-            _notes.Add(new NoteData()
-            {
-                Count = 1,
-                Beat = beat,
-            });
+            _beatLevel.NoteList.Add(beat);
+            //_notes.Add(new NoteData()
+            //{
+            //    Count = 1,
+            //    Beat = beat,
+            //});
         }
 
 
         public void SaveRythms()
         {
        
-            _levelFileHandler.SaveRythmToFile(_songStage.StageName,_notes);
-            Console.WriteLine("Saved File FOR : " + _songStage.StageName);
-            _notes.Clear();
+            _levelFileHandler.SaveRythmToFile(_songStage.StageName,_beatLevel);
+           _beatLevel.NoteList.Clear(); 
         }
     }
 }

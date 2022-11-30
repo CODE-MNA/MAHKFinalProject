@@ -11,6 +11,7 @@ namespace MAHKFinalProject.Scenes
     {
         public LevelSelectScene(Game game) : base(game)
         {
+
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Prototype.Rythm;
+﻿
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,19 +12,19 @@ namespace Prototype.Serialization
     public class LevelFileHandler
     {
         IRythmSerializer _serializer;
-        const string PATH = "Test/";
+        const string PATH = "MadeMaps/";
 
         public LevelFileHandler(IRythmSerializer serializer)
         {
             _serializer = serializer;
         }
 
-        public void SaveRythmToFile(string fileName,List<NoteData>rythm)
+        public void SaveRythmToFile(string fileName,BeatLevel rythm)
         {
             
 
             
-                using (StreamWriter writer = new StreamWriter($"{PATH}{fileName}"))
+                using (StreamWriter writer = new StreamWriter($"{PATH}{fileName}.rdat"))
                 {
                   writer.WriteLine(_serializer.Serialize(rythm));
                 }
@@ -32,10 +32,10 @@ namespace Prototype.Serialization
 
         }
 
-        public List<NoteData> LoadRythmFromFile(string fileName)
+        public BeatLevel LoadRythmFromFile(string fileName)
         {
             string parsed;
-            using (StreamReader reader = new StreamReader($"{PATH}{fileName}"))
+            using (StreamReader reader = new StreamReader($"{PATH}{fileName}.rdat"))
             {
                 parsed = reader.ReadToEnd();
             }

@@ -13,7 +13,7 @@ namespace Prototype.Serialization
     public class LevelFileHandler
     {
         IRythmSerializer _serializer;
-        const string PATH = "Test/";
+        const string PATH = "Maps/";
 
         public LevelFileHandler(IRythmSerializer serializer)
         {

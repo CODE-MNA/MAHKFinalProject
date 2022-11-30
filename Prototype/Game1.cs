@@ -55,7 +55,7 @@ namespace Prototype
             Random random = new Random();
             Vector2 pos = new Vector2(random.Next((int)SharedVars.STAGE.X - 200),random.Next((int)SharedVars.STAGE.Y - 200));
             _explosion = new ExplosionAnimation(this, _spriteBatch, _explosionTexture, pos, 0.01f);
-            _songStagePrototype = new SongStage(this, _song,"Astronaut",_explosion);
+            _songStagePrototype = new SongStage(this, _song,"Astronaut13",_explosion);
             _noteMaker = new NoteMaker(this, _songStagePrototype);
             this.Components.Add(_songStagePrototype);
             this.Components.Add(_noteMaker);
@@ -73,7 +73,7 @@ namespace Prototype
 
             MouseState ms = Mouse.GetState();
 
-            if (InputHelpers.WasJustClicked(ms.MiddleButton,_oldState.MiddleButton))
+            if (InputHelpers.WasJustClicked(ms.LeftButton,_oldState.LeftButton))
             {
                 _songStagePrototype.PlayFromStart();
             }
