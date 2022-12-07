@@ -17,7 +17,7 @@ namespace MAHKFinalProject.DrawableComponents
         public Vector2 _position;
 
         protected Conductor _conductor;
-        private readonly float PRE_DELAY = 0.125f;
+        private readonly float DELAY_BETWEEN_SPAWN_AND_HIT = 0;
 
         protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor) : base(game)
         {
@@ -56,7 +56,7 @@ namespace MAHKFinalProject.DrawableComponents
         {
           
 
-            if(HitBeat == _conductor.GetQuantizedBeat() + PRE_DELAY)
+            if(HitBeat == _conductor.GetQuantizedBeat() + DELAY_BETWEEN_SPAWN_AND_HIT)
             {
                 SpawnNote();
                 

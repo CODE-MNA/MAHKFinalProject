@@ -25,6 +25,8 @@ namespace MAHKFinalProject.DrawableComponents
         float initY;
 
         float step;
+
+
         public override void Initialize()
         {
             
@@ -55,16 +57,19 @@ namespace MAHKFinalProject.DrawableComponents
             startSeconds = _conductor.GetSongSeconds();
             endSeconds = _conductor.GetSecondsFromBeat(HitBeat);
             initY = _position.Y;
-           
+
+
         }
 
         public override void UpdateActive(GameTime gameTime)
         {
+            // When u click it
             throw new NotImplementedException();
         }
 
         public override void UpdateEnded(GameTime gameTime)
         {
+            // after
             throw new NotImplementedException();
         }
 
@@ -72,20 +77,9 @@ namespace MAHKFinalProject.DrawableComponents
         public override void UpdateSpawned(GameTime gameTime)
         {
             //Instead of using update, use conductors update time
+            _velocityFall = GetLerpY();
 
-            //60 FPS * 
-            if (_targetPos.Y <= _position.Y)
-            {
-                step = 0;
-                _position = _targetPos;
-                this.Enabled = false;
-            }
-            else
-            {
-                float oldY = _position.Y;
-                _position = new Vector2(_position.X,step + GetLerpY());
-                step += _position.Y + oldY/10;
-            }
+            _position = new Vector2(_position.X,_velocityFall/100 * (float)gameTime.ElapsedGameTime.Ticks);
             
             
         }
@@ -99,7 +93,7 @@ namespace MAHKFinalProject.DrawableComponents
 
             float b3 = (float)endSeconds-(float)startSeconds;
             float answer = ((b1 * b2) / b3) + initY;
-            return answer /100 ;
+            return answer;
         }
 
 

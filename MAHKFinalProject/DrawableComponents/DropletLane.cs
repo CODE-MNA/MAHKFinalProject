@@ -22,7 +22,7 @@ namespace MAHKFinalProject.DrawableComponents
         Texture2D _texture;
 
         public Game1 g;
-
+        
         public DropletLane(Game game,Vector2 spawnCorner,int width,int height, Texture2D texture) : base(game)
         {
             g = (Game1)game;
