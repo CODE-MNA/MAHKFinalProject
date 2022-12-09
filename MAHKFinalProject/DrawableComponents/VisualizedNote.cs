@@ -64,6 +64,8 @@ namespace MAHKFinalProject.DrawableComponents
         {
 
             Status = NoteStatus.Ended;
+            this.Enabled = false;
+            this.Visible = false;
         }
         #endregion
 

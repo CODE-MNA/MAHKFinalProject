@@ -20,24 +20,29 @@ namespace MAHKFinalProject.DrawableComponents
 {
     public class AnimationTexture : DrawableGameComponent
     {
-        private SpriteBatch _spriteBatch;
         private Texture2D _texture;
         private float _cellWidth;
         private float _cellHeight;
         private int _frameIndex = 0;
         private int _delay = 10;
         private int _delayCount = 0;
-        Vector2 _position;
         private List<Rectangle> _frames = new List<Rectangle>();
+        public Action OnAnimationStopped;
 
-        public AnimationTexture(Game game, Texture2D texture, Vector2 position, float cellWidth, float cellHeight, int delay) : base(game)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="texture">whole texture</param>
+        /// <param name="cellWidth">each frame's width</param>
+        /// <param name="cellHeight">each frame's height</param>
+        /// <param name="delay">a period until change to next frame </param>
+        public AnimationTexture(Game game, Texture2D texture, float cellWidth, float cellHeight, int delay) : base(game)
         {
             Game1 g = (Game1) game;
-            _spriteBatch = g.SpriteBatch;
             _texture = texture;
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
-            _position = position;
             _delay = delay;
 
             int rows = texture.Height / (int)_cellHeight;
@@ -53,16 +58,17 @@ namespace MAHKFinalProject.DrawableComponents
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        // get texture that will use
+        public Texture2D GetAnimatedTexture()
         {
-            _spriteBatch.Begin();
-            if (_frameIndex >= 0)
-            {
-                _spriteBatch.Draw(_texture, _position, _frames[_frameIndex], Color.White);
-            }
-            _spriteBatch.End();
+            return _texture;
+        }
 
-            base.Draw(gameTime);
+        // get Current frame
+        public Rectangle GetCurrentFrame()
+        {
+            if (_frameIndex < 0) _frameIndex = 0;
+            return _frames[_frameIndex];
         }
 
         public override void Update(GameTime gameTime)
@@ -77,6 +83,7 @@ namespace MAHKFinalProject.DrawableComponents
                     _delayCount = 0;
                     if (_frameIndex == _frames.Count)
                     {
+                        OnAnimationStopped?.Invoke();
                         _frameIndex = -1;
                     }
                 }
