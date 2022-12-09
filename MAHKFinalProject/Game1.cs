@@ -76,7 +76,6 @@ namespace MAHKFinalProject
 
         protected override void Update(GameTime gameTime)
         {
-
             // TODO: Add your update logic here
             KeyboardState ks = Keyboard.GetState();
             int index = _mainMenuScene.MenuComponent.SelectedIndex;
@@ -85,7 +84,8 @@ namespace MAHKFinalProject
                 if(index == 5 && ks.IsKeyDown(Keys.Enter))
                 {
                     _mainMenuScene.Hide();
-
+                    // reset game
+                    testScene = new TestLevelScene(this);
                     testScene.Show();
 
                 }else if (index == 4 && ks.IsKeyDown(Keys.Enter))
@@ -106,11 +106,13 @@ namespace MAHKFinalProject
                 else if (index == 2 && ks.IsKeyDown(Keys.Enter))
                 {
                     _mainMenuScene.Hide();
+                    _aboutScene = new AboutScene(this);
                     _aboutScene.Show();
                 }
                 else if (index == 3 && ks.IsKeyDown(Keys.Enter))
                 {
                     _mainMenuScene.Hide();
+                    _rankingScene = new RankingScene(this);
                     _rankingScene.Show();
                 }
             }
