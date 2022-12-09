@@ -40,14 +40,15 @@ namespace MAHKFinalProject.Scenes
         string _levelName;
         int bpm;
         Song _song;
-        
 
+        float hitYLine;
         //Test
         SpriteFont _font;
 
         LevelFileHandler _levelFileHandler;
         ScoreManager scoreManager;
-        
+        private string lastAdded;
+
         public TestLevelScene(Game game) : base(game)
         {
             g = (Game1)game;
@@ -85,8 +86,9 @@ namespace MAHKFinalProject.Scenes
 
 
                 Vector2 spawnpoint = new Vector2(laneForNewDrop.dropletSpawnPos.X-10,laneForNewDrop.dropletSpawnPos.Y);
-                
-                Droplet drop = new Droplet(g, dropTime,new Vector2(spawnpoint.X,spawnpoint.Y), new Vector2(spawnpoint.X,spawnpoint.Y + SharedVars.STAGE.Y - 220) ,_levelConductor,this, laneForNewDrop);
+
+                hitYLine = spawnpoint.Y + SharedVars.STAGE.Y - 226;
+                Droplet drop = new Droplet(g, dropTime,new Vector2(spawnpoint.X,spawnpoint.Y), new Vector2(spawnpoint.X,hitYLine) ,_levelConductor,this, laneForNewDrop);
                 
                 AssignEventHandlers(drop);
                 
@@ -109,6 +111,7 @@ namespace MAHKFinalProject.Scenes
 
             g.SpriteBatch.Begin();
             g.SpriteBatch.DrawString(_font, scoreManager.CurentScore.ToString(), new Vector2(280, 30), Color.White);
+            g.SpriteBatch.DrawString(_font,"----",new Vector2(10,hitYLine),Color.White);
             g.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -149,26 +152,12 @@ namespace MAHKFinalProject.Scenes
         {
             note.OnTapped += () =>
             {
-                scoreManager.CurentScore += (int)MathF.Floor(CalculateScore((Droplet)note));
+                scoreManager.CurentScore += (int)MathF.Floor(note.CalculateScore());
+                lastAdded =((int)note.CalculateScore()).ToString();
             };
         }
 
-        float CalculateScore(Droplet drop)
-        {
-            float finalscore = 200;
-
-            finalscore -= (MathF.Abs((float)drop._targetPos.Y - (float)drop._position.Y));
-
-            if(finalscore < 210 && finalscore > 195)
-            {
-                return finalscore * 3;
-            }
-
-
-            if(finalscore <= 0) finalscore = 0;
-
-            return finalscore * 1.5f;
-        }
+       
 
 
 

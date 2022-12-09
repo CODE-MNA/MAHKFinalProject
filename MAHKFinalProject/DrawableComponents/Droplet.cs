@@ -105,7 +105,7 @@ namespace MAHKFinalProject.DrawableComponents
             //Instead of using update, use conductors update time
 
            
-                _position = new Vector2(_position.X, _position.Y + _velocityFall / 193);
+                _position = new Vector2(_position.X, _position.Y + _velocityFall / 220);
          
 
          
@@ -123,7 +123,23 @@ namespace MAHKFinalProject.DrawableComponents
         //    float answer = ((b1 * b2) / b3) + initY;
         //    return answer;
         //}
+        public override float CalculateScore()
+        {
+            float finalscore = 200;
 
+            finalscore -= (MathF.Abs((float)_targetPos.Y - (float)_position.Y));
+
+            if (finalscore > 185 && _position.Y >= _targetPos.Y  || finalscore > 187&& _position.Y < _targetPos.Y)
+            {
+              
+                return finalscore * 3.25f;
+            }
+
+
+            if (finalscore <= 0) finalscore = 0;
+
+            return finalscore;
+        }
 
     }
 }

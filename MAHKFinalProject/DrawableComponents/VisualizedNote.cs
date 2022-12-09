@@ -12,6 +12,7 @@ namespace MAHKFinalProject.DrawableComponents
     {
         protected Game1 g;
 
+
         public float HitBeat { get; set; }
         public NoteStatus Status { get; set; } = NoteStatus.NotSpawned;
         
@@ -115,5 +116,7 @@ namespace MAHKFinalProject.DrawableComponents
 
             base.Update(gameTime);
         }
+
+        public abstract float CalculateScore();
     }
 }
