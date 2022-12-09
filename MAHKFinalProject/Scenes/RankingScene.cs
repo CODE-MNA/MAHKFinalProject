@@ -1,4 +1,5 @@
-﻿using MAHKFinalProject.Helpers;
+﻿using MAHKFinalProject.GameComponents;
+using MAHKFinalProject.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -18,7 +19,8 @@ namespace MAHKFinalProject.Scenes
         private Vector2 _velocity;
         private Texture2D _background;
         private Rectangle _backgroundRect;
-        private int[] scores;
+        private ScoreFileManager _scoreFileManager;
+        private List<int> scores;
 
         public RankingScene(Game game) : base(game)
         {
@@ -32,7 +34,9 @@ namespace MAHKFinalProject.Scenes
             this._backgroundRect = new Rectangle(0, 0, (int) SharedVars.STAGE.X, (int) SharedVars.STAGE.Y);
 
             // temp value
-            scores = new int[] { 95, 100, 120, 30, 50 };
+            _scoreFileManager = new ScoreFileManager();
+            scores = _scoreFileManager.getHighScores(5);
+            // scores = new int[] { 95, 100, 120, 30, 50 };
         }
 
         public override void Draw(GameTime gameTime)
@@ -51,10 +55,9 @@ namespace MAHKFinalProject.Scenes
             initPos.Y += _spriteFont.LineSpacing * 3;
 
             // set score - from the file
-            int[] sortScores = scores.OrderByDescending(n => n).ToArray();
-            foreach (var (item, index) in sortScores.Select((item, index) => (item, index)))
+            foreach (var (item, index) in scores.Select((item, index) => (item, index)))
             {
-                string msg = $"Rank [{index+1}] {item} pts";
+                string msg = $"Rank {index+1} - {item} pts";
                 _spriteBatch.DrawString(_spriteFont, msg, initPos, Color.White);
                 initPos.Y += _spriteFont.LineSpacing * 2;
             }
