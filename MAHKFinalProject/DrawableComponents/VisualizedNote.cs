@@ -1,7 +1,10 @@
 ﻿using MAHKFinalProject.GameComponents;
 using MAHKFinalProject.RhythmComponents;
+using MAHKFinalProject.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MAHKFinalProject.DrawableComponents
 {
@@ -9,17 +12,26 @@ namespace MAHKFinalProject.DrawableComponents
     {
         protected Game1 g;
 
+
         public float HitBeat { get; set; }
         public NoteStatus Status { get; set; } = NoteStatus.NotSpawned;
+        
 
         public Texture2D _texture;
 
         public Vector2 _position;
 
-        protected Conductor _conductor;
-        private readonly float PRE_DELAY = 0.125f;
+        public Action OnTapped { get; set; }
 
-        protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor) : base(game)
+        private double _startSeconds;
+        private double _endSeconds;
+        protected float diffSeconds;
+
+        protected Conductor _conductor;
+        private readonly float DELAY_BETWEEN_SPAWN_AND_HIT = 0.125f;
+
+
+        protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor, TestLevelScene LEVEL) : base(game)
         {
            
             HitBeat = hitBeat;
@@ -28,20 +40,27 @@ namespace MAHKFinalProject.DrawableComponents
             this.Enabled = true;
             _position = spawnPosition;
             _conductor = conductor;
-            
+            _endSeconds = _conductor.GetSecondsFromBeat(HitBeat);
+
         }
 
         #region Transitions
-        public void SpawnNote()
+        public virtual void SpawnNote()
         {
             this.Visible = true;
             Status = NoteStatus.Spawned;
+            
+            _startSeconds = _conductor.GetSecondsFromBeat(HitBeat - DELAY_BETWEEN_SPAWN_AND_HIT);
+
+            diffSeconds = (float)(_endSeconds - _startSeconds);
+
         }
-        public  void ActivateNote()
+        public virtual void ActivateNote()
         {
             Status = NoteStatus.Active;
+            OnTapped?.Invoke();
         }
-        public  void EndNote()
+        public virtual void EndNote()
         {
 
             Status = NoteStatus.Ended;
@@ -56,8 +75,9 @@ namespace MAHKFinalProject.DrawableComponents
         {
           
 
-            if(HitBeat == _conductor.GetQuantizedBeat() + PRE_DELAY)
+            if(HitBeat == _conductor.GetQuantizedBeat() + DELAY_BETWEEN_SPAWN_AND_HIT)
             {
+              
                 SpawnNote();
                 
             }
@@ -66,8 +86,10 @@ namespace MAHKFinalProject.DrawableComponents
         public abstract void UpdateSpawned(GameTime gameTime);
         public abstract void UpdateActive(GameTime gameTime);
 
-        public abstract void UpdateEnded(GameTime gameTime);    
+        public abstract void UpdateEnded(GameTime gameTime);
 
+
+        public abstract Keys GetAssignedKey();
 
 
         public override void Update(GameTime gameTime)
@@ -94,5 +116,7 @@ namespace MAHKFinalProject.DrawableComponents
 
             base.Update(gameTime);
         }
+
+        public abstract float CalculateScore();
     }
 }

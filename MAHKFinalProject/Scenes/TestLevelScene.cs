@@ -15,15 +15,16 @@ using System.Threading.Tasks;
 
 namespace MAHKFinalProject.Scenes
 {
-    internal class TestLevelScene : GameScene
+    public class TestLevelScene : GameScene
     {
         //Take it to abstract base Level
-        List<Droplet> droplets;
-        
+        public Queue<VisualizedNote> SpawnedDroplets { get; set; }
+
+
         List<DropletLane> Lanes;
 
 
-
+        KeyboardState _oldKeyboardState;
         MouseState _oldState;
         Conductor _levelConductor;
         
@@ -40,8 +41,14 @@ namespace MAHKFinalProject.Scenes
         int bpm;
         Song _song;
 
+        float hitYLine;
+        //Test
+        SpriteFont _font;
+
         LevelFileHandler _levelFileHandler;
-        
+        ScoreManager scoreManager;
+        private string lastAdded;
+
         public TestLevelScene(Game game) : base(game)
         {
             g = (Game1)game;
@@ -59,21 +66,34 @@ namespace MAHKFinalProject.Scenes
             _song = g.Content.Load<Song>("Songs/" + _levelName + "Song");
             _levelFileHandler = new LevelFileHandler(new RythmSerializer());
 
+            _font = g.Content.Load<SpriteFont>("Fonts/regularFont");
+            
 
+
+            scoreManager = new ScoreManager();
             _levelConductor = new Conductor(g, _levelName, _song, bpm);
 
             this.GameComponents.Add(_levelConductor);
 
-            droplets = new List<Droplet>();
+            SpawnedDroplets = new Queue<VisualizedNote>();
 
             //For each loaded beat level, read the floats and generate new points for it
          
             BeatLevel loaded = LoadBeatLevel();
             foreach (float dropTime in loaded.NoteList )
             {
-                Vector2 spawnpoint = GetRandomLaneSpawnpoint();
-                Droplet drop = new Droplet(g, dropTime,spawnpoint, new Vector2(spawnpoint.X,spawnpoint.Y + SharedVars.STAGE.Y - 70) ,_levelConductor);
+                DropletLane laneForNewDrop = GetRandomLane();
 
+
+                Vector2 spawnpoint = new Vector2(laneForNewDrop.dropletSpawnPos.X-10,laneForNewDrop.dropletSpawnPos.Y);
+
+                hitYLine = spawnpoint.Y + SharedVars.STAGE.Y - 226;
+                Droplet drop = new Droplet(g, dropTime,new Vector2(spawnpoint.X,spawnpoint.Y), new Vector2(spawnpoint.X,hitYLine) ,_levelConductor,this, laneForNewDrop);
+                
+                AssignEventHandlers(drop);
+                
+
+           
                 this.GameComponents.Add(drop);
             }
 
@@ -84,6 +104,17 @@ namespace MAHKFinalProject.Scenes
             base.Initialize();
 
           
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+
+            g.SpriteBatch.Begin();
+            g.SpriteBatch.DrawString(_font, scoreManager.CurentScore.ToString(), new Vector2(280, 30), Color.White);
+            g.SpriteBatch.DrawString(_font,"----",new Vector2(10,hitYLine),Color.White);
+            g.SpriteBatch.End();
+
+            base.Draw(gameTime);
         }
 
         void InitializeLanes()
@@ -98,12 +129,17 @@ namespace MAHKFinalProject.Scenes
             {
 
                 DropletLane newLane = new DropletLane(g, nextPos, (int)laneWidth, (int)SharedVars.STAGE.Y, _laneTexture);
-
+                
                 Lanes.Add(newLane);
                 GameComponents.Add(newLane);
 
                 nextPos = new Vector2(nextPos.X + laneWidth, nextPos.Y);
             }
+
+            Lanes[0].TriggerKey = Keys.F;
+            Lanes[1].TriggerKey = Keys.G;
+            Lanes[2].TriggerKey = Keys.H;
+            Lanes[3].TriggerKey = Keys.J;
         }
 
 
@@ -111,6 +147,19 @@ namespace MAHKFinalProject.Scenes
         {
 
         }
+
+        void AssignEventHandlers(VisualizedNote note)
+        {
+            note.OnTapped += () =>
+            {
+                scoreManager.CurentScore += (int)MathF.Floor(note.CalculateScore());
+                lastAdded =((int)note.CalculateScore()).ToString();
+            };
+        }
+
+       
+
+
 
         BeatLevel TEMPBEATLEVEL()
         {
@@ -135,25 +184,65 @@ namespace MAHKFinalProject.Scenes
             base.LoadContent();
         }
 
-        Vector2 GetRandomLaneSpawnpoint()
+        DropletLane GetRandomLane()
         {
             Random rand = new Random();
              DropletLane lane = Lanes[rand.Next(0, LANE_AMOUNT)];
 
-            return lane.dropletSpawnPos;
+            return lane;
         }
 
         public override void Update(GameTime gameTime)
         {
             MouseState ms = Mouse.GetState();
+            KeyboardState ks = Keyboard.GetState();
 
-            if(ms.LeftButton == ButtonState.Pressed && _oldState.LeftButton == ButtonState.Released)
+            if (ms.LeftButton == ButtonState.Pressed && _oldState.LeftButton == ButtonState.Released)
             {
 
                 _levelConductor.PlayFromStart();
             } 
 
+            //if key pressed check if correct key pressed
+            //if yes then remove drop
+            //only do this for top drop
 
+
+            if(SpawnedDroplets.TryPeek(out var droplet))
+            {
+
+                //Set as active droplet
+
+                if (droplet.Status == RhythmComponents.NoteStatus.NotSpawned)
+                {
+                    return;
+                }
+
+                if (droplet._position.Y > Helpers.SharedVars.STAGE.Y - 1)
+                {
+                    SpawnedDroplets.Dequeue();
+                    return;
+                }
+
+
+                if (ks.IsKeyDown(droplet.GetAssignedKey()) && _oldKeyboardState.IsKeyUp(droplet.GetAssignedKey())){
+
+                            droplet.ActivateNote();
+                            SpawnedDroplets.Dequeue();
+
+                      
+
+                    }
+
+                
+
+
+
+            }
+
+
+
+            _oldKeyboardState = ks;
             _oldState = ms;
 
             base.Update(gameTime);

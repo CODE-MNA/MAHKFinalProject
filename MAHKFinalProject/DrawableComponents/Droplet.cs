@@ -1,7 +1,9 @@
 ﻿using MAHKFinalProject.GameComponents;
 using MAHKFinalProject.RhythmComponents;
+using MAHKFinalProject.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +17,21 @@ namespace MAHKFinalProject.DrawableComponents
     public class Droplet : VisualizedNote
     {
         float _velocityFall;
-        Vector2 _targetPos;
+        public Vector2 _targetPos;
 
+        TestLevelScene _levelScene;
 
-        double prevFrameSeconds;
-        double currentFrameSeconds;
-        double startSeconds;
-        double endSeconds;
-        float initY;
+        // temp
+        DropletLane _lane;
 
-        float step;
+        
+        
+        public override Keys GetAssignedKey()
+        {
+            return _lane.TriggerKey;
+        }
+        
+
         public override void Initialize()
         {
             
@@ -39,33 +46,57 @@ namespace MAHKFinalProject.DrawableComponents
         public override void Draw(GameTime gameTime)
         {
             g.SpriteBatch.Begin();
+           
             g.SpriteBatch.Draw(_texture,
                 new Rectangle((int)_position.X,(int)_position.Y,_texture.Width, _texture.Height),Color.AliceBlue);
             g.SpriteBatch.End();
             
             base.Draw(gameTime);    
         }
-        public Droplet(Game game, float hitBeat, Vector2 position,Vector2 target, Conductor conductor) : base(game, hitBeat ,position , conductor)
+        public Droplet(Game game, float hitBeat, Vector2 position,Vector2 target, Conductor conductor, TestLevelScene level, DropletLane lane) : base(game, hitBeat ,position , conductor, level)
         {
             g = (Game1)game;
             _texture = g.Content.Load<Texture2D>("droplet");
             _targetPos = target;
             Status = NoteStatus.NotSpawned;
 
-            startSeconds = _conductor.GetSongSeconds();
-            endSeconds = _conductor.GetSecondsFromBeat(HitBeat);
-            initY = _position.Y;
-           
+
+            _levelScene = level;
+            _lane = lane;
+          
+
+            
+
         }
+
+
+        public override void SpawnNote()
+        {
+            base.SpawnNote();
+            _velocityFall = (_targetPos.Y - _position.Y) / diffSeconds;
+
+            //Enque
+            _levelScene.SpawnedDroplets.Enqueue(this);
+        }
+
 
         public override void UpdateActive(GameTime gameTime)
         {
-            throw new NotImplementedException();
+
+            //DeQueue
+            
+        
+            //play animation
+
+
+            //Score
+
         }
 
         public override void UpdateEnded(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            // after
+          
         }
 
       
@@ -73,35 +104,42 @@ namespace MAHKFinalProject.DrawableComponents
         {
             //Instead of using update, use conductors update time
 
-            //60 FPS * 
-            if (_targetPos.Y <= _position.Y)
-            {
-                step = 0;
-                _position = _targetPos;
-                this.Enabled = false;
-            }
-            else
-            {
-                float oldY = _position.Y;
-                _position = new Vector2(_position.X,step + GetLerpY());
-                step += _position.Y + oldY/10;
-            }
-            
-            
+           
+                _position = new Vector2(_position.X, _position.Y + _velocityFall / 220);
+         
+
+         
+
         }
-        float GetLerpY()
+        //float GetLerpY()
+        //{
+        //    currentFrameSeconds = _conductor.GetSongSeconds();
+
+        //    float b1 = (float)currentFrameSeconds-(float)startSeconds ;
+
+        //    float b2 = _targetPos.Y - initY;
+
+        //    float b3 = (float)endSeconds-(float)startSeconds;
+        //    float answer = ((b1 * b2) / b3) + initY;
+        //    return answer;
+        //}
+        public override float CalculateScore()
         {
-            currentFrameSeconds = _conductor.GetSongSeconds();
+            float finalscore = 200;
 
-            float b1 = (float)currentFrameSeconds-(float)startSeconds ;
+            finalscore -= (MathF.Abs((float)_targetPos.Y - (float)_position.Y));
 
-            float b2 = _targetPos.Y - initY;
+            if (finalscore > 185 && _position.Y >= _targetPos.Y  || finalscore > 187&& _position.Y < _targetPos.Y)
+            {
+              
+                return finalscore * 3.25f;
+            }
 
-            float b3 = (float)endSeconds-(float)startSeconds;
-            float answer = ((b1 * b2) / b3) + initY;
-            return answer /100 ;
+
+            if (finalscore <= 0) finalscore = 0;
+
+            return finalscore;
         }
-
 
     }
 }
