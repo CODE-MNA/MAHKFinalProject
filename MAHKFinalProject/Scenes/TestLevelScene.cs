@@ -18,47 +18,54 @@ namespace MAHKFinalProject.Scenes
     public class TestLevelScene : GameScene
     {
         //Take it to abstract base Level
-        public Queue<VisualizedNote> SpawnedDroplets { get; set; }
-
-
-        List<DropletLane> Lanes;
-
-
+        public Queue<VisualizedNote> SpawnedNotes { get; set; }
+        Conductor _levelConductor;
+        Game1 g;
         KeyboardState _oldKeyboardState;
         MouseState _oldState;
-        Conductor _levelConductor;
-        
-        Game1 g;
-       
-        Texture2D _laneTexture;
-
-        Vector2 nextPos;
-        float laneWidth;
-        const int LANE_AMOUNT = 4;
-
-
         string _levelName;
         int bpm;
         Song _song;
-
-        float hitYLine;
-        //Test
-        SpriteFont _font;
-
         LevelFileHandler _levelFileHandler;
         ScoreManager scoreManager;
-        private string lastAdded;
+        SpriteFont _font;
 
+
+        List<DropletLane> Lanes;
+        Texture2D _laneTexture;
+        float laneWidth;
+        const int LANE_AMOUNT = 4;
+        float hitYLine;
+        //Test
+
+        //Decoration
+        List<Rectangle> pulses;
+  
         public TestLevelScene(Game game) : base(game)
         {
             g = (Game1)game;
+
+            _laneTexture = g.Content.Load<Texture2D>("dropletLane");
+            InitializeLanes();
+            pulses = new List<Rectangle>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    Rectangle rect = new Rectangle((int)(i * SharedVars.STAGE.X / 10), (int)(j * SharedVars.STAGE.Y / 10), (int)(SharedVars.STAGE.X / 10), (int)(SharedVars.STAGE.Y / 10));
+                    pulses.Add(rect);   
+
+                }
+
+            }
+
+
             _oldState = Mouse.GetState();
 
 
-            _laneTexture = g.Content.Load<Texture2D>("dropletLane");
 
 
-            InitializeLanes();
 
             //Todo get level info and make base map class with level name, loading level, bpm etc
             _levelName = "Astronaut13";
@@ -75,7 +82,7 @@ namespace MAHKFinalProject.Scenes
 
             this.GameComponents.Add(_levelConductor);
 
-            SpawnedDroplets = new Queue<VisualizedNote>();
+            SpawnedNotes = new Queue<VisualizedNote>();
 
             //For each loaded beat level, read the floats and generate new points for it
          
@@ -110,8 +117,11 @@ namespace MAHKFinalProject.Scenes
         {
 
             g.SpriteBatch.Begin();
+
+
             g.SpriteBatch.DrawString(_font, scoreManager.CurentScore.ToString(), new Vector2(280, 30), Color.White);
-            g.SpriteBatch.DrawString(_font,"----",new Vector2(10,hitYLine),Color.White);
+            g.SpriteBatch.DrawString(_font, "---------------------------------------------------------------------------------------------", new Vector2(10,hitYLine+60),Color.White);
+            g.SpriteBatch.DrawString(_font, "---------------------------------------------------------------------------------------------", new Vector2(10,hitYLine+5),Color.White);
             g.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -119,7 +129,7 @@ namespace MAHKFinalProject.Scenes
 
         void InitializeLanes()
         {
-            nextPos = new Vector2(0, 0);
+           Vector2 nextPos = new Vector2(0, 0);
 
             Lanes = new List<DropletLane>();
 
@@ -152,8 +162,24 @@ namespace MAHKFinalProject.Scenes
         {
             note.OnTapped += () =>
             {
-                scoreManager.CurentScore += (int)MathF.Floor(note.CalculateScore());
-                lastAdded =((int)note.CalculateScore()).ToString();
+                float tapScore = note.CalculateScore();
+                scoreManager.CurentScore += (int)MathF.Floor(tapScore);
+
+                //break into child and super
+
+                Droplet drop  = (Droplet)note;
+
+
+                if(tapScore > 250)
+                {
+                    drop._lane.FlashLane(true);
+
+                }
+                else
+                {
+                    drop._lane.FlashLane(false);
+                }
+                
             };
         }
 
@@ -161,17 +187,7 @@ namespace MAHKFinalProject.Scenes
 
 
 
-        BeatLevel TEMPBEATLEVEL()
-        {
-            return new BeatLevel()
-            {
-                NoteList = new List<float>()
-                {
-                    8, 9, 10, 11, 12, 16
-                }
-            };
-        }
-
+        
         BeatLevel LoadBeatLevel()
         {
            return _levelFileHandler.LoadRythmFromFile(_levelName + ".rdat");
@@ -208,7 +224,7 @@ namespace MAHKFinalProject.Scenes
             //only do this for top drop
 
 
-            if(SpawnedDroplets.TryPeek(out var droplet))
+            if(SpawnedNotes.TryPeek(out var droplet))
             {
 
                 //Set as active droplet
@@ -220,7 +236,7 @@ namespace MAHKFinalProject.Scenes
 
                 if (droplet._position.Y > Helpers.SharedVars.STAGE.Y - 1)
                 {
-                    SpawnedDroplets.Dequeue();
+                    SpawnedNotes.Dequeue();
                     return;
                 }
 
@@ -228,8 +244,8 @@ namespace MAHKFinalProject.Scenes
                 if (ks.IsKeyDown(droplet.GetAssignedKey()) && _oldKeyboardState.IsKeyUp(droplet.GetAssignedKey())){
 
                             droplet.ActivateNote();
-                            SpawnedDroplets.Dequeue();
-
+                            
+                            SpawnedNotes.Dequeue();
                       
 
                     }
