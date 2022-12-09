@@ -51,6 +51,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/regularFont.spritefont
 
+#begin greenFlash.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:greenFlash.png
+
 #begin Images/help.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -80,4 +92,16 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Songs/prototype.mp3;Songs/Astronaut13Song.mp3
+
+#begin yellowFlash.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:yellowFlash.png
 

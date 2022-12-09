@@ -22,10 +22,10 @@ namespace MAHKFinalProject.DrawableComponents
         TestLevelScene _levelScene;
 
         // temp
-        DropletLane _lane;
+        public DropletLane _lane;
 
-        
-        
+        //Animation anim;
+
         public override Keys GetAssignedKey()
         {
             return _lane.TriggerKey;
@@ -46,9 +46,12 @@ namespace MAHKFinalProject.DrawableComponents
         public override void Draw(GameTime gameTime)
         {
             g.SpriteBatch.Begin();
-           
-            g.SpriteBatch.Draw(_texture,
-                new Rectangle((int)_position.X,(int)_position.Y,_texture.Width, _texture.Height),Color.AliceBlue);
+
+
+
+
+            g.SpriteBatch.Draw(_texture, new Rectangle((int)_position.X,(int)_position.Y,_texture.Width,_texture.Height), Color.AntiqueWhite);
+
             g.SpriteBatch.End();
             
             base.Draw(gameTime);    
@@ -76,7 +79,7 @@ namespace MAHKFinalProject.DrawableComponents
             _velocityFall = (_targetPos.Y - _position.Y) / diffSeconds;
 
             //Enque
-            _levelScene.SpawnedDroplets.Enqueue(this);
+            _levelScene.SpawnedNotes.Enqueue(this);
         }
 
 
@@ -123,6 +126,9 @@ namespace MAHKFinalProject.DrawableComponents
         //    float answer = ((b1 * b2) / b3) + initY;
         //    return answer;
         //}
+
+        
+
         public override float CalculateScore()
         {
             float finalscore = 200;
