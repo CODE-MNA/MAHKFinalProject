@@ -67,7 +67,8 @@ namespace MAHKFinalProject.DrawableComponents
             _levelScene = level;
             _lane = lane;
           
-
+            
+            // anim.OnAnimationStopped += ()=> EndNote();
             
 
         }
@@ -86,14 +87,8 @@ namespace MAHKFinalProject.DrawableComponents
         public override void UpdateActive(GameTime gameTime)
         {
 
-            //DeQueue
-            
-        
             //play animation
-
-
-            //Score
-
+            
         }
 
         public override void UpdateEnded(GameTime gameTime)

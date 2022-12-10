@@ -29,7 +29,7 @@ namespace MAHKFinalProject.DrawableComponents
         private int _delayCount = 0;
         Vector2 _position;
         private List<Rectangle> _frames = new List<Rectangle>();
-
+        
         public AnimationTexture(Game game, Texture2D texture, Vector2 position, float cellWidth, float cellHeight, int delay) : base(game)
         {
             Game1 g = (Game1) game;

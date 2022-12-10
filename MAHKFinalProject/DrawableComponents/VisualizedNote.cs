@@ -62,8 +62,8 @@ namespace MAHKFinalProject.DrawableComponents
         }
         public virtual void EndNote()
         {
-
-            Status = NoteStatus.Ended;
+           Status = NoteStatus.Ended;
+         
         }
         #endregion
 
