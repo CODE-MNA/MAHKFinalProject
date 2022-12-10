@@ -24,7 +24,7 @@ namespace MAHKFinalProject.DrawableComponents
         // temp
         public DropletLane _lane;
 
-        //Animation anim;
+        AnimationTexture anim;
 
         public override Keys GetAssignedKey()
         {
@@ -47,10 +47,9 @@ namespace MAHKFinalProject.DrawableComponents
         {
             g.SpriteBatch.Begin();
 
+/*            g.SpriteBatch.Draw(_texture, new Rectangle((int)_position.X,(int)_position.Y,_texture.Width,_texture.Height), Color.AntiqueWhite);*/
 
-
-
-            g.SpriteBatch.Draw(_texture, new Rectangle((int)_position.X,(int)_position.Y,_texture.Width,_texture.Height), Color.AntiqueWhite);
+            g.SpriteBatch.Draw(anim.GetAnimatedTexture(), _position, anim.GetCurrentFrame(), Color.AntiqueWhite);
 
             g.SpriteBatch.End();
             
@@ -63,14 +62,20 @@ namespace MAHKFinalProject.DrawableComponents
             _targetPos = target;
             Status = NoteStatus.NotSpawned;
 
-
             _levelScene = level;
             _lane = lane;
+<<<<<<< HEAD
           
             
             // anim.OnAnimationStopped += ()=> EndNote();
             
+=======
+>>>>>>> 5eef1de456e9fa9559c3c4e8187a3f9ae1f5bdcc
 
+            // set animation class
+            anim = new AnimationTexture(game, _texture, 64.0f, 64.0f, 2);
+            // when the droplet is hitted, droplet is going to disappear after animating
+            anim.OnAnimationStopped += () => base.EndNote(); 
         }
 
 
@@ -87,8 +92,19 @@ namespace MAHKFinalProject.DrawableComponents
         public override void UpdateActive(GameTime gameTime)
         {
 
+<<<<<<< HEAD
             //play animation
             
+=======
+            //DeQueue
+
+
+            //play animation
+            anim.Update(gameTime);
+
+            //Score
+
+>>>>>>> 5eef1de456e9fa9559c3c4e8187a3f9ae1f5bdcc
         }
 
         public override void UpdateEnded(GameTime gameTime)
@@ -101,13 +117,8 @@ namespace MAHKFinalProject.DrawableComponents
         public override void UpdateSpawned(GameTime gameTime)
         {
             //Instead of using update, use conductors update time
-
-           
                 _position = new Vector2(_position.X, _position.Y + _velocityFall / 220);
-         
-
-         
-
+        
         }
         //float GetLerpY()
         //{
