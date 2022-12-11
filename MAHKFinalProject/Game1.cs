@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System;
 
 namespace MAHKFinalProject
 {
@@ -16,7 +17,9 @@ namespace MAHKFinalProject
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
 
         TestLevelScene testScene;
-
+        public bool Paused;
+        public Action OnPause;
+        public Action OnUnPause;
 
         // MainMenu Scene
         private MainMenuScene _mainMenuScene;
@@ -28,13 +31,19 @@ namespace MAHKFinalProject
         private AboutScene _aboutScene;
         // Ranking Scene
         private RankingScene _rankingScene;
+        private KeyboardState _oldKeyboardState;
 
-
+        public SpriteFont GlobalFont { get; set; }
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+
+            _graphics.ApplyChanges();
             IsMouseVisible = true;
         }
 
@@ -48,7 +57,9 @@ namespace MAHKFinalProject
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+         
+            
+
             SharedVars.STAGE = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             base.Initialize();
         }
@@ -56,7 +67,7 @@ namespace MAHKFinalProject
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+            GlobalFont = this.Content.Load<SpriteFont>("Fonts/regularFont");
 
             // TODO: use this.Content to load your game content here
             // load scenes
@@ -76,8 +87,34 @@ namespace MAHKFinalProject
 
         protected override void Update(GameTime gameTime)
         {
-            // TODO: Add your update logic here
+            
             KeyboardState ks = Keyboard.GetState();
+
+            if (ks.IsKeyDown(Keys.P) && _oldKeyboardState.IsKeyUp(Keys.P))
+            {
+                Paused = !Paused;
+
+                if (Paused)
+                {
+                    OnPause?.Invoke();
+
+                    _oldKeyboardState = ks;
+                
+                    return;
+                }
+                else
+                {
+                    OnUnPause?.Invoke();
+                    _oldKeyboardState = ks;
+                  
+                    return;
+                }
+            }
+
+        
+            
+
+
             int index = _mainMenuScene.MenuComponent.SelectedIndex;
             if (_mainMenuScene.Enabled)
             {
@@ -122,6 +159,8 @@ namespace MAHKFinalProject
                 hideAllScenes();
                 _mainMenuScene.Show();
             }
+
+            _oldKeyboardState = ks;
 
             base.Update(gameTime);
         }

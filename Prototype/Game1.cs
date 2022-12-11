@@ -49,13 +49,13 @@ namespace Prototype
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _font = this.Content.Load<SpriteFont>("regularFont");
-            _song = this.Content.Load<Song>("prototype");
+            _song = this.Content.Load<Song>("WF_Endgame");
              _explosionTexture = this.Content.Load<Texture2D>("explosion");
             _songs = new List<Song>();
             Random random = new Random();
             Vector2 pos = new Vector2(random.Next((int)SharedVars.STAGE.X - 200),random.Next((int)SharedVars.STAGE.Y - 200));
             _explosion = new ExplosionAnimation(this, _spriteBatch, _explosionTexture, pos, 0.01f);
-            _songStagePrototype = new SongStage(this, _song,"Astronaut13",_explosion);
+            _songStagePrototype = new SongStage(this, _song,"testEG",_explosion);
             _noteMaker = new NoteMaker(this, _songStagePrototype);
             this.Components.Add(_songStagePrototype);
             this.Components.Add(_noteMaker);

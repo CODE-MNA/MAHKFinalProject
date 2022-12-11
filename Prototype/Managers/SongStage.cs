@@ -22,7 +22,7 @@ namespace Prototype.Managers
             set { _stageName = value; }
         }
         Song _song;
-        float bpm = 69f;
+        float bpm = 123f;
         BeatLevel _notes;
         ExplosionAnimation _noteInstance;
         Game g;
@@ -69,15 +69,26 @@ namespace Prototype.Managers
         {
             if(times.TryGetValue(GetQuantizedBeat() , out float time))
             {
+                
                 GenerateNote();
-                times.Remove(GetQuantizedBeat());   
+                times.Remove(GetQuantizedBeat());
+            }
+            else
+            {
+                foreach (var item in _notes.NoteList)
+                {
+                    if(MathF.Abs(GetQuantizedBeat() - item) < 0.01f){
+                        GenerateNote();
+                        times.Remove(item);
+                    }
+                }
             }
             base.Update(gameTime);
         }
 
         internal float GetQuantizedBeat()
         {
-            int shortBeat = (int)MathF.Round(GetCurrentBeat() * 4);
+            float shortBeat = (GetCurrentBeat() * 4);
             return (float)shortBeat / 8f;
             
         }
@@ -88,7 +99,7 @@ namespace Prototype.Managers
             Vector2 pos = new Vector2(random.Next((int)SharedVars.STAGE.X - 200), random.Next((int)SharedVars.STAGE.Y - 200));
 
             Game1 ourGame = (Game1)g;
-            ExplosionAnimation newComponent = ourGame.CreateNewExplosion(pos,0.01f);
+            ExplosionAnimation newComponent = ourGame.CreateNewExplosion(pos,1);
 
             
             ourGame.Components.Add(newComponent);

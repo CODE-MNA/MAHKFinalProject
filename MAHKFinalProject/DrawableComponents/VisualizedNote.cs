@@ -28,7 +28,7 @@ namespace MAHKFinalProject.DrawableComponents
         protected float diffSeconds;
 
         protected Conductor _conductor;
-        private readonly float DELAY_BETWEEN_SPAWN_AND_HIT = 0.125f;
+        protected float DELAY_BETWEEN_SPAWN_AND_HIT = 1f;
 
 
         protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor, TestLevelScene LEVEL) : base(game)
@@ -62,27 +62,25 @@ namespace MAHKFinalProject.DrawableComponents
         }
         public virtual void EndNote()
         {
-<<<<<<< HEAD
-           Status = NoteStatus.Ended;
-         
-=======
 
             Status = NoteStatus.Ended;
             this.Enabled = false;
             this.Visible = false;
->>>>>>> 5eef1de456e9fa9559c3c4e8187a3f9ae1f5bdcc
         }
         #endregion
 
 
-
+        protected float GetInterpolationValue()
+        {
+            return (DELAY_BETWEEN_SPAWN_AND_HIT - (HitBeat - _conductor.GetCurrentBeat()/2)) / DELAY_BETWEEN_SPAWN_AND_HIT;
+        }
 
 
         public virtual void UpdateNotSpawned(GameTime gameTime)
         {
           
 
-            if(HitBeat == _conductor.GetQuantizedBeat() + DELAY_BETWEEN_SPAWN_AND_HIT)
+            if(MathF.Abs(HitBeat - _conductor.GetCurrentBeat()/2) < DELAY_BETWEEN_SPAWN_AND_HIT && _conductor.GetCurrentBeat() > 0)
             {
               
                 SpawnNote();
@@ -124,6 +122,22 @@ namespace MAHKFinalProject.DrawableComponents
             base.Update(gameTime);
         }
 
-        public abstract float CalculateScore();
+        public virtual float CalculateScore()
+        {
+            float beatDiff = MathF.Abs(HitBeat - _conductor.GetCurrentBeat() / 2f);
+            float score = 800;
+            if(beatDiff < 0.0525f){
+
+            }
+            else
+            {
+                score -= beatDiff * 1400;
+            }
+
+        
+
+            if(score <= 0 ) score = 0;
+            return score;
+        }
     }
 }

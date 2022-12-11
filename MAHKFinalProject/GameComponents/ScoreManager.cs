@@ -10,6 +10,8 @@ namespace MAHKFinalProject.GameComponents
     {
         public int CurentScore { get; set; }
 
+        public int CurrentCombo { get; set; }
+
         
         
     }

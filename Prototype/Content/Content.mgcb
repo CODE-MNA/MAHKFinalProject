@@ -38,3 +38,9 @@
 /processorParam:TextureFormat=Compressed
 /build:regularFont.spritefont
 
+#begin WF_Endgame.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:WF_Endgame.mp3
+
