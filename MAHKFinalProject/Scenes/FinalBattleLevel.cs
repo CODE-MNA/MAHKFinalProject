@@ -9,7 +9,7 @@ namespace MAHKFinalProject.Scenes
 {
     internal class FinalBattleLevel : BaseLevelScene
     {
-        public FinalBattleLevel(Game game) : base(game, "", 68)
+        public FinalBattleLevel(Game game) : base(game, "WF_FinalBattle", 73)
         {
 
         }
