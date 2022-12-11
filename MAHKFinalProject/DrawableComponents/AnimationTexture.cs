@@ -24,12 +24,13 @@ namespace MAHKFinalProject.DrawableComponents
         private float _cellWidth;
         private float _cellHeight;
         private int _frameIndex = 0;
-        private int _delay = 10;
-        private int _delayCount = 0;
+        private float _delaySeconds = 0.5f;
+        private float _elapsedSeconds = 0;
         private List<Rectangle> _frames = new List<Rectangle>();
         public Action OnAnimationStopped;
 
-        bool _isPlaying = false;
+         bool _isPlaying = false;
+        public bool IsAnimationPlaying { get => _isPlaying; }
         bool _isLooping = false;
 
 
@@ -41,14 +42,15 @@ namespace MAHKFinalProject.DrawableComponents
         /// <param name="cellWidth">each frame's width</param>
         /// <param name="cellHeight">each frame's height</param>
         /// <param name="delay">a period until change to next frame </param>
-        public AnimationTexture(Game game, Texture2D texture, float cellWidth, float cellHeight, int delay, bool playOnSpawn = true, bool loop = false) : base(game)
+        public AnimationTexture(Game game, Texture2D texture, float cellWidth, float cellHeight, float delay, bool playOnSpawn = true, bool loop = false) : base(game)
         {
             Game1 g = (Game1) game;
             _texture = texture;
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
-            _delay = delay;
+            _delaySeconds = delay;
 
+            _isLooping = loop;
             _isPlaying = playOnSpawn;
 
             int rows = texture.Height / (int)_cellHeight;
@@ -83,10 +85,26 @@ namespace MAHKFinalProject.DrawableComponents
             _frameIndex = 0;
         }
 
-        public void StopPlaying()
+        public void StopPlaying(bool stopOnLastFrame = false)
         {
             _isPlaying = false;
+
+            if (!stopOnLastFrame)
+            {
             _frameIndex = 0;
+
+            }
+            else
+            {
+                _frameIndex = _frames.Count - 1;
+            }
+
+        }
+
+        public void SetDelay(float seconds)
+        {
+          _delaySeconds = seconds;
+            _elapsedSeconds = 0;
         }
 
         public override void Update(GameTime gameTime)
@@ -96,24 +114,28 @@ namespace MAHKFinalProject.DrawableComponents
             // change frames
             if (_frameIndex >= 0)
             {
-                _delayCount++;
-                if (_delayCount > _delay)
+                _elapsedSeconds += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                
+                
+                if (_elapsedSeconds > _delaySeconds / _frames.Count)
                 {
                     _frameIndex++;
-                    _delayCount = 0;
+                    _elapsedSeconds = 0;
                     if (_frameIndex == _frames.Count)
                     {
 
                         if (_isLooping)
                         {
                             _frameIndex = 0;
-                            
+                      
+
                         }
                         else
                         {
-                            OnAnimationStopped?.Invoke();
                             _frameIndex = 0;
                             _isPlaying = false;
+                            OnAnimationStopped?.Invoke();
                         }
                     }
                 }

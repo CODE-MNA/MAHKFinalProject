@@ -55,7 +55,7 @@ namespace MAHKFinalProject.DrawableComponents
 
 /*            g.SpriteBatch.Draw(_texture, new Rectangle((int)_position.X,(int)_position.Y,_texture.Width,_texture.Height), Color.AntiqueWhite);*/
 
-            g.SpriteBatch.Draw(anim.GetAnimatedTexture(), _position, anim.GetCurrentFrame(), Color.AntiqueWhite,0,Vector2.Zero,scale:0.5f,SpriteEffects.None,0);
+            g.SpriteBatch.Draw(anim.GetAnimatedTexture(), _position, anim.GetCurrentFrame(), Color.AntiqueWhite,0,Vector2.Zero,scale:0.7f,SpriteEffects.None,0);
 
             g.SpriteBatch.End();
             
@@ -64,7 +64,7 @@ namespace MAHKFinalProject.DrawableComponents
         public Droplet(Game game, float hitBeat, Vector2 position,Vector2 target, Conductor conductor, BaseLevelScene level, DropletLane lane) : base(game, hitBeat ,position , conductor, level)
         {
             g = (Game1)game;
-            _texture = g.Content.Load<Texture2D>("DestroyedSquare");
+            _texture = g.Content.Load<Texture2D>("Animation/DestroyedSquare");
             _targetPos = target;
             Status = NoteStatus.NotSpawned;
 
@@ -72,7 +72,7 @@ namespace MAHKFinalProject.DrawableComponents
             _lane = lane;
 
             // set animation class
-            anim = new AnimationTexture(game, _texture, 64.0f, 64.0f, 1);
+            anim = new AnimationTexture(game, _texture, 64.0f, 64.0f, 0.3f);
             // when the droplet is hitted, droplet is going to disappear after animating
             anim.OnAnimationStopped += () => base.EndNote(); 
 

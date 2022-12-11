@@ -13,11 +13,10 @@ namespace MAHKFinalProject.Scenes
 {
     public class FinalBattleLevel : BaseLevelScene
     {
-        Texture2D _temp;
+        Texture2D _strumBarTexture;
 
-        bool drawSprite;
-
-        float stay;
+  
+        
 
         bool freestyleMode = false;
 
@@ -26,7 +25,7 @@ namespace MAHKFinalProject.Scenes
         int nextZoneNote;
         float modeChangeTime;
 
-        private float DEFAULT_MODE_TIME = 54;
+        private float DEFAULT_MODE_TIME = 24;
 
         float hitXLine = 60;
         List<Droplet> dropBeatNotes = new List<Droplet>();
@@ -35,12 +34,14 @@ namespace MAHKFinalProject.Scenes
         List<DropletLane> Lanes { get; set; }
         TeleportZone _zoneWithPlayer;
         TeleportPlayer _player;
-        DropletLane _tempLane;
+       
         private int numberOfLanes = 3;
 
         int laneIndex = 0;
         int laneIncrement= 1;
         int counter = 0;
+        private int numOffreeZones = 4;
+
         DropletLane GetNextLane()
         {
             counter++;  
@@ -68,8 +69,8 @@ namespace MAHKFinalProject.Scenes
             //This Level uses seconds to sync notes instead of beats
             _levelConductor.Mode = MAHKFinalProject.GameComponents.Conductor.SyncMode.Seconds;
             _verticalLevel = false;
-            stay = 0;
-           _temp = g.Content.Load<Texture2D>("dropletLane");
+          
+           _strumBarTexture = g.Content.Load<Texture2D>("dropletLane");
 
             modeChangeTime = DEFAULT_MODE_TIME;
 
@@ -120,7 +121,7 @@ namespace MAHKFinalProject.Scenes
             for (int i = 0; i < numberOfLanes; i++)
             {
 
-                DropletLane newLane = new DropletLane(g, nextPos, (int)STAGE.X, laneHeight, _temp);
+                DropletLane newLane = new DropletLane(g, nextPos, (int)STAGE.X, laneHeight, _strumBarTexture);
 
                 newLane.dropletSpawnPos = new Vector2(newLane._width - 10, (laneHeight * i) + newLane._height / 2);
 
@@ -146,24 +147,47 @@ namespace MAHKFinalProject.Scenes
         {
             Random range = new Random();
 
-            foreach(TeleportZone zone in zones) zone.IsDangerous = false;
-            
-            int maxHarmfulZoneCount = zones.Count - 2;
+            foreach(TeleportZone zone in zones)
+            {
+                if (zone.IsDangerous) zone.ZoneFlash();
+
+                zone.IsDangerous = false;
+
+
+            }            
+            int maxHarmfulZoneCount = zones.Count - numOffreeZones;
 
             if (maxHarmfulZoneCount <= 1)
             {
                 _zoneWithPlayer.IsDangerous = true;
-                return;
+                
+
             }
-
-
-
-            for (int i = 0; i < maxHarmfulZoneCount; i++)
+            else
             {
-                int randIndex = range.Next(0, zones.Count);
-                zones[randIndex].IsDangerous = true;
+                for (int i = 0; i < maxHarmfulZoneCount; i++)
+                {
+                    int randIndex = range.Next(0, zones.Count);
+                    zones[randIndex].IsDangerous = true;
+                }
+
+                _zoneWithPlayer.IsDangerous = true;
             }
-            _zoneWithPlayer.IsDangerous = true;
+
+
+
+
+
+            foreach (TeleportZone zone in zones)
+            {
+                float timeToNext = 1f;
+                if (nextZoneNote + 1 < _loadedLevel.NoteList.Count)
+                {
+                    timeToNext = _loadedLevel.NoteList[nextZoneNote + 1] - 0.27f - (float)_levelConductor.GetSongSeconds();
+                }
+
+                zone.RefreshZoneAnimation(timeToNext);
+            }
 
         }
 
@@ -178,7 +202,7 @@ namespace MAHKFinalProject.Scenes
             }
             else
             {
-                g.SpriteBatch.Draw(_temp, new Rectangle(160, 0, 80, (int)STAGE.Y), Color.Azure);
+                g.SpriteBatch.Draw(_strumBarTexture, new Rectangle(160, 0, 80, (int)STAGE.Y), Color.Azure);
             }
 
             g.SpriteBatch.End();
@@ -225,19 +249,24 @@ namespace MAHKFinalProject.Scenes
                 freestyleMode = true;
                 onFreestyleMode?.Invoke();
 
+                int distFromCorner = 220;
 
-               TeleportZone zone1 =  new TeleportZone(g, new Vector2(Helpers.SharedVars.STAGE.X / 2, Helpers.SharedVars.STAGE.Y / 2), Keys.D,150,150);
-               TeleportZone zone2 =  new TeleportZone(g, new Vector2((Helpers.SharedVars.STAGE.X + 3 )/ 6 , (Helpers.SharedVars.STAGE.Y - 33) / 7), Keys.A,150,150);
-                
-                zone1.IsDangerous = true;
-                zone2.IsDangerous = true;
+               TeleportZone zone1 =  new TeleportZone(g, new Vector2(STAGE.X / 2, (STAGE.Y + distFromCorner) / 2), Keys.Space);
+               TeleportZone zone2 =  new TeleportZone(g, new Vector2( distFromCorner , distFromCorner), Keys.R);
+                TeleportZone zone3 = new TeleportZone(g, new Vector2((STAGE.X - distFromCorner), (STAGE.Y - distFromCorner)), Keys.N);
+                TeleportZone zone4 = new TeleportZone(g, new Vector2((distFromCorner), (STAGE.Y - distFromCorner)), Keys.V);
+                TeleportZone zone5 = new TeleportZone(g, new Vector2((STAGE.X -distFromCorner) ,(distFromCorner)), Keys.I);
+               
+                zones.Add(zone1);
+                zones.Add(zone2);
+                zones.Add(zone3);
+                zones.Add(zone4);
+                zones.Add(zone5);
 
                 _player = new TeleportPlayer(g, zone1.Position);
 
                 MovePlayer(zone1);
 
-                zones.Add(zone1);
-                zones.Add(zone2);
 
                 GameComponents.AddRange(zones);
                 GameComponents.Add(_player);
@@ -299,11 +328,6 @@ namespace MAHKFinalProject.Scenes
 
             
 
-            if (stay > 1)
-            {
-                stay = 0;
-                drawSprite = false;
-            }
 
             base.Update(gameTime);
 

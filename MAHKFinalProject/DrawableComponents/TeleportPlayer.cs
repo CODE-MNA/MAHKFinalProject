@@ -33,7 +33,7 @@ namespace MAHKFinalProject.DrawableComponents
             g = (Game1)game;    
             _position = position;
 
-            Texture2D spriteSheet = g.Content.Load<Texture2D>("DestroyedSquare");
+            Texture2D spriteSheet = g.Content.Load<Texture2D>("Animation/DestroyedSquare");
             _anim = new AnimationTexture(game, spriteSheet, 64, 64, 1, false);
         }
 

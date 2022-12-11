@@ -79,8 +79,8 @@ namespace MAHKFinalProject.Scenes
 
             g.SpriteBatch.Begin();
             g.SpriteBatch.DrawString(_font, scoreText, new Vector2(280, 30), Color.White);
-            g.SpriteBatch.DrawString(_font, dashes  ,new Vector2(0,hitYLine),Color.Red);
-            g.SpriteBatch.DrawString(_font, dashes, new Vector2(0,hitYLine - 40),Color.Blue);
+            g.SpriteBatch.DrawString(_font, dashes  ,new Vector2(0,hitYLine +10),Color.Red);
+            g.SpriteBatch.DrawString(_font, dashes, new Vector2(0,hitYLine - 30),Color.Blue);
             if (base.levelEnded)
             {
                 string overMessage = "Game End, Your Score was : " + scoreManager.CurrentScore;
