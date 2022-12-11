@@ -23,11 +23,11 @@ namespace MAHKFinalProject.Scenes
         {
             Game1 g = (Game1)game;
             this._spriteBatch = g.SpriteBatch;
-            this._position = new Vector2(SharedVars.STAGE.X / 7, SharedVars.STAGE.Y);
+            this._position = new Vector2(SharedVars.STAGE.X / 3, SharedVars.STAGE.Y);
             this._headerFont = g.Content.Load<SpriteFont>("Fonts/hilightFont");
             this._spriteFont = g.Content.Load<SpriteFont>("Fonts/regularFont");
             this._background = g.Content.Load<Texture2D>("Images/space");
-            this._velocity = new Vector2(0, 1.0f);
+            this._velocity = new Vector2(0, 2.0f);
             this._backgroundRect = new Rectangle(0, 0, (int) SharedVars.STAGE.X, (int) SharedVars.STAGE.Y);
         }
 

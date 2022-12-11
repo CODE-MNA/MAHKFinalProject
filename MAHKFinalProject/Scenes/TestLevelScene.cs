@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Prototype.Serialization;
+using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
 
@@ -21,6 +22,8 @@ namespace MAHKFinalProject.Scenes
         float hitYLine;
         //Test
         string dashes;
+        bool endGame = false;
+        SpriteFont endGameFont;
 
         //Decoration
         List<Rectangle> pulses;
@@ -43,14 +46,6 @@ namespace MAHKFinalProject.Scenes
 
             }
 
-
-
-
-
-
-
-          
-
             //Droplet Code
             foreach (float dropTime in _loadedLevel.NoteList )
             {
@@ -64,38 +59,50 @@ namespace MAHKFinalProject.Scenes
                 
                 AssignEventHandlers(drop);
                 
-
-           
                 this.GameComponents.Add(drop);
             }
-            int dashNumber = (int)SharedVars.STAGE.X / (int)_font.MeasureString("----").X;
 
+            int dashNumber = (int)SharedVars.STAGE.X / (int)_font.MeasureString("----").X;
 
             for (int i = 0; i <= dashNumber; i++)
             {
                 dashes += "----";
             }
 
+            // add event
+            base.OnLevelEnd += EndLevel;
+            endGameFont = g.Content.Load<SpriteFont>("Fonts/hilightFont");
 
         }
+
+        public void EndLevel()
+        {
+            // add event
+            ScoreFileManager scoreFileManager = new ScoreFileManager();
+            scoreFileManager.recordScore(base.scoreManager.CurentScore);
+
+            // set game End
+            endGame = true;
+        }
+
+
         public override void Initialize()
         {
-          
-
             base.Initialize();
-
-   
         }
 
         public override void Draw(GameTime gameTime)
         {
+            string scoreText = $"Score: {scoreManager.CurentScore.ToString()}";
 
             g.SpriteBatch.Begin();
-
-
-            g.SpriteBatch.DrawString(_font, scoreManager.CurentScore.ToString(), new Vector2(280, 30), Color.White);
+            g.SpriteBatch.DrawString(_font, scoreText, new Vector2(280, 30), Color.White);
             g.SpriteBatch.DrawString(_font, dashes  ,new Vector2(0,hitYLine),Color.Red);
             g.SpriteBatch.DrawString(_font, dashes, new Vector2(0,hitYLine - 40),Color.Blue);
+            if (endGame)
+            {
+                g.SpriteBatch.DrawString(endGameFont, "Game End", new Vector2(SharedVars.STAGE.X / 2, SharedVars.STAGE.Y / 2), Color.White);
+            }
             g.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -180,7 +187,6 @@ namespace MAHKFinalProject.Scenes
 
         public override void Update(GameTime gameTime)
         {
-          
 
             base.Update(gameTime);
         }

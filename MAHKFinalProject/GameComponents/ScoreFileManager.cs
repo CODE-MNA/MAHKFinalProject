@@ -51,6 +51,7 @@ namespace MAHKFinalProject.GameComponents
                         if (!string.IsNullOrEmpty(content))
                         {
                             scoreTexts = content.Split("\n").ToList();
+                            scoreTexts.RemoveAt(scoreTexts.Count - 1); // delete last empty list
                             scores = scoreTexts.Select(int.Parse).ToList();
                             ranks = scores.OrderByDescending(s => s).Take(numberOfRanks).ToList();
                         }
