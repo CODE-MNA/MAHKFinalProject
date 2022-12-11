@@ -29,7 +29,7 @@ namespace MAHKFinalProject.DrawableComponents
         protected float diffSeconds;
 
         protected Conductor _conductor;
-        protected float DELAY_BETWEEN_SPAWN_AND_HIT = 1f;
+        public float DELAY_BETWEEN_SPAWN_AND_HIT = 1f;
 
         SyncMode _syncMode;
         protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor, BaseLevelScene LEVEL) : base(game)
@@ -147,14 +147,26 @@ namespace MAHKFinalProject.DrawableComponents
 
         public virtual float CalculateScore()
         {
-            float beatDiff = MathF.Abs(HitBeat - _conductor.GetCurrentBeat() / 2f);
+            float diff;
+
+            float range = 0.0525f;
+            if (_syncMode == SyncMode.Beats)
+            {
+
+             diff = MathF.Abs(HitBeat - _conductor.GetCurrentBeat() / 2f);
+            }
+            else
+            {
+                diff = MathF.Abs((float)(HitBeat - _conductor.GetSongSeconds()));
+                range = 0.036f;
+            }
             float score = 800;
-            if(beatDiff < 0.0525f){
+            if(diff < range){
 
             }
             else
             {
-                score -= beatDiff * 1400;
+                score -= diff * 1400;
             }
 
         

@@ -1,5 +1,5 @@
 ﻿using MAHKFinalProject.DrawableComponents;
-using MAHKFinalProject.Helpers;
+using static MAHKFinalProject.Helpers.SharedVars;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -26,20 +26,48 @@ namespace MAHKFinalProject.Scenes
         int nextZoneNote;
         float modeChangeTime;
 
-        private float DEFAULT_MODE_TIME = 20;
+        private float DEFAULT_MODE_TIME = 54;
 
-        float hitXLine = 160;
+        float hitXLine = 60;
         List<Droplet> dropBeatNotes = new List<Droplet>();
 
         List<TeleportZone> zones = new List<TeleportZone>();
+        List<DropletLane> Lanes { get; set; }
         TeleportZone _zoneWithPlayer;
         TeleportPlayer _player;
         DropletLane _tempLane;
+        private int numberOfLanes = 3;
+
+        int laneIndex = 0;
+        int laneIncrement= 1;
+        int counter = 0;
+        DropletLane GetNextLane()
+        {
+            counter++;  
+
+            if(counter %  25 == 0)
+            {
+                laneIncrement = -laneIncrement;
+            }
+            
+            laneIndex += laneIncrement;
+            if(laneIndex >= numberOfLanes)
+            {
+                laneIndex = 0;
+                
+            }else if( laneIndex < 0)
+            {
+                laneIndex = numberOfLanes - 1;
+              
+            }
+            return Lanes[laneIndex];
+        }
+
         public FinalBattleLevel(Game game) : base(game, "WF_FinalBattle", 73)
         {
             //This Level uses seconds to sync notes instead of beats
             _levelConductor.Mode = MAHKFinalProject.GameComponents.Conductor.SyncMode.Seconds;
-
+            _verticalLevel = false;
             stay = 0;
            _temp = g.Content.Load<Texture2D>("dropletLane");
 
@@ -55,21 +83,59 @@ namespace MAHKFinalProject.Scenes
                     modeChangeTime = _loadedLevel.EventList[0];
                 }
             }
-
-            _tempLane = new DropletLane(g, Vector2.One, 1, 1, _temp);
-            _tempLane.TriggerKey = Keys.K;
+            InitializeLanes();
+ 
 
             //Only fill till the event guy says
             foreach (var item in _loadedLevel.NoteList)
             {
                 if (item >= modeChangeTime) continue;
-                Droplet drop = new Droplet(g, item, SharedVars.STAGE / 2, new Vector2(hitXLine, 140), _levelConductor, this, _tempLane);
+
+                DropletLane lane = GetNextLane();
+                
+
+
+                Droplet drop = new Droplet(g, item, lane.dropletSpawnPos, new Vector2(hitXLine, lane.dropletSpawnPos.Y), _levelConductor, this, lane);
+                drop.DELAY_BETWEEN_SPAWN_AND_HIT = 0.9f;
+                AssignTapHandlers(drop);
+                
                 dropBeatNotes.Add(drop);
             }
+
+   
 
             GameComponents.AddRange(dropBeatNotes);
          
         }
+
+
+        void InitializeLanes()
+        {
+            Vector2 nextPos = new Vector2(0, 0);
+
+            Lanes = new List<DropletLane>();
+
+            int laneHeight = (int)(STAGE.Y / numberOfLanes);
+
+            for (int i = 0; i < numberOfLanes; i++)
+            {
+
+                DropletLane newLane = new DropletLane(g, nextPos, (int)STAGE.X, laneHeight, _temp);
+
+                newLane.dropletSpawnPos = new Vector2(newLane._width - 10, (laneHeight * i) + newLane._height / 2);
+
+                Lanes.Add(newLane);
+                
+
+                nextPos = new Vector2(nextPos.X, nextPos.Y + laneHeight);
+            }
+
+            Lanes[0].TriggerKey = Keys.E;
+            Lanes[1].TriggerKey = Keys.F;
+            Lanes[2].TriggerKey = Keys.V;
+            GameComponents.AddRange(Lanes);
+        }
+
 
         protected override void ImplementNoteConstruction()
         {
@@ -112,7 +178,7 @@ namespace MAHKFinalProject.Scenes
             }
             else
             {
-                g.SpriteBatch.Draw(_temp, new Rectangle(160, 0, 80, (int)SharedVars.STAGE.Y), Color.Azure);
+                g.SpriteBatch.Draw(_temp, new Rectangle(160, 0, 80, (int)STAGE.Y), Color.Azure);
             }
 
             g.SpriteBatch.End();

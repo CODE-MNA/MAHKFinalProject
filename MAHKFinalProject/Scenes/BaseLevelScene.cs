@@ -29,6 +29,9 @@ namespace MAHKFinalProject.Scenes
         public Action OnLevelEnd;
         protected bool levelEnded = false;
         protected int framesToEndGame = 60* 2;
+        protected readonly int _perfectTapScore = 800;
+
+        protected bool _verticalLevel = true;
         public BaseLevelScene(Game game,string levelName, int injectedBpm) : base(game)
         {
             g = (Game1)game;
@@ -111,12 +114,32 @@ namespace MAHKFinalProject.Scenes
                     return;
                 }
 
-                if (frontNote._position.Y > Helpers.SharedVars.STAGE.Y - 100)
-                {
-                    SpawnedNotes.Dequeue();
 
-                    DeregisterRecentNote();
-                    return;
+
+
+                if (_verticalLevel)
+                {
+                    if (frontNote._position.Y > Helpers.SharedVars.STAGE.Y - 80)
+                    {
+                        SpawnedNotes.Dequeue();
+
+                        DeregisterRecentNote();
+                        base.Update(gameTime);
+                        return;
+                    }
+
+
+                }
+                else
+                {
+                    if ( frontNote._position.X < 80)
+                    {
+                        SpawnedNotes.Dequeue();
+
+                        DeregisterRecentNote();
+                        base.Update(gameTime);
+                        return;
+                    }
                 }
 
 
@@ -168,6 +191,37 @@ namespace MAHKFinalProject.Scenes
 
         }
 
+
+        public virtual void AssignTapHandlers(VisualizedNote note)
+        {
+            note.OnTapped += () =>
+            {
+                int tapScore = (int)note.CalculateScore();
+                if (tapScore >= _perfectTapScore)
+                {
+                    tapScore += tapScore + (200 * scoreManager.CurrentCombo);
+                    scoreManager.CurrentCombo = scoreManager.CurrentCombo + 1;
+                }
+                else
+                {
+                    scoreManager.CurrentCombo = 0;
+                }
+
+                scoreManager.CurrentScore += (int)MathF.Floor(tapScore);
+
+                Droplet drop = (Droplet)note;
+                if (tapScore >= _perfectTapScore)
+                {
+                    drop._lane.FlashLane(true);
+
+                }
+                else
+                {
+                    drop._lane.FlashLane(false);
+                }
+
+            };
+        }
         protected abstract void ImplementNoteConstruction();
     }
 }

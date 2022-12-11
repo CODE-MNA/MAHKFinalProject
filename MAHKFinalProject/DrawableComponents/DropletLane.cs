@@ -13,6 +13,7 @@ namespace MAHKFinalProject.DrawableComponents
     {
         public Vector2 dropletSpawnPos;
 
+
         public Vector2 ImpactPos;
 
         public Vector2 _spawnCorner;

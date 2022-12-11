@@ -118,15 +118,14 @@ namespace MAHKFinalProject.Scenes
 
 
        
-        void AssignEventHandlers(VisualizedNote note)
+        public override void AssignTapHandlers(VisualizedNote note)
         {
-            int perfectHitPoints = 800;
+          
             note.OnTapped += () =>
             {
-                float tapScore = note.CalculateScore();
 
-
-                if(tapScore >= perfectHitPoints)
+                int tapScore = (int)note.CalculateScore();
+                if (tapScore >= _perfectTapScore)
                 {
                     tapScore += tapScore + (200 * scoreManager.CurrentCombo);
                     scoreManager.CurrentCombo = scoreManager.CurrentCombo + 1;
@@ -141,7 +140,7 @@ namespace MAHKFinalProject.Scenes
                 Droplet drop  = (Droplet)note;
 
 
-                if(tapScore >= perfectHitPoints)
+                if(tapScore >= _perfectTapScore )
                 {
                     drop._lane.FlashLane(true);
 
@@ -187,7 +186,7 @@ namespace MAHKFinalProject.Scenes
             
                 Droplet drop = new Droplet(g, dropTime, new Vector2(spawnpoint.X, spawnpoint.Y), new Vector2(spawnpoint.X, hitYLine), _levelConductor, this, laneForNewDrop);
 
-                AssignEventHandlers(drop);
+                AssignTapHandlers(drop);
 
                 this.GameComponents.Add(drop);
             }
