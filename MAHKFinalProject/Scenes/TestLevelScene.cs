@@ -9,10 +9,7 @@ using Microsoft.Xna.Framework.Media;
 using Prototype.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MAHKFinalProject.Helpers;
+
 namespace MAHKFinalProject.Scenes
 {
     public class TestLevelScene : BaseLevelScene
