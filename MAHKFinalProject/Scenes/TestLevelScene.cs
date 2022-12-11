@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Prototype.Serialization;
+using SharpDX.MediaFoundation;
 using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,6 @@ namespace MAHKFinalProject.Scenes
         float hitYLine;
         //Test
         string dashes;
-        bool endGame = false;
         SpriteFont endGameFont;
 
         //Decoration
@@ -72,19 +72,15 @@ namespace MAHKFinalProject.Scenes
             // add event
             base.OnLevelEnd += EndLevel;
             endGameFont = g.Content.Load<SpriteFont>("Fonts/hilightFont");
-
         }
 
+        // when the level's ended, it'll be called
         public void EndLevel()
         {
-            // add event
+            // record score
             ScoreFileManager scoreFileManager = new ScoreFileManager();
             scoreFileManager.recordScore(base.scoreManager.CurentScore);
-
-            // set game End
-            endGame = true;
         }
-
 
         public override void Initialize()
         {
@@ -99,7 +95,7 @@ namespace MAHKFinalProject.Scenes
             g.SpriteBatch.DrawString(_font, scoreText, new Vector2(280, 30), Color.White);
             g.SpriteBatch.DrawString(_font, dashes  ,new Vector2(0,hitYLine),Color.Red);
             g.SpriteBatch.DrawString(_font, dashes, new Vector2(0,hitYLine - 40),Color.Blue);
-            if (endGame)
+            if (base.levelEnded)
             {
                 g.SpriteBatch.DrawString(endGameFont, "Game End", new Vector2(SharedVars.STAGE.X / 2, SharedVars.STAGE.Y / 2), Color.White);
             }
