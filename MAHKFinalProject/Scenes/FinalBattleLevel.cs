@@ -25,7 +25,7 @@ namespace MAHKFinalProject.Scenes
         int nextZoneNote;
         float modeChangeTime;
 
-        private float DEFAULT_MODE_TIME = 24;
+        private float DEFAULT_MODE_TIME = 6;
 
         float hitXLine = 60;
         List<Droplet> dropBeatNotes = new List<Droplet>();
