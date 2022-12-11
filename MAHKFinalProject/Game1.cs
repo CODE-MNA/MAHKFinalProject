@@ -22,8 +22,7 @@ namespace MAHKFinalProject
 
         // MainMenu Scene
         private MainMenuScene _mainMenuScene;
-        // Level select Scene
-        private LevelSelectScene _levelSelectScene;
+        
         // Help Scene
         private HelpScene _helpScene;
         // About Scene
@@ -33,7 +32,7 @@ namespace MAHKFinalProject
         private KeyboardState _oldKeyboardState;
 
         private FirstLevelScene _firstLevelScene;
-        private FinalBattleLevel testScene;
+        private FinalBattleLevel _secondLevelScene;
 
         public SpriteFont GlobalFont { get; set; }
         public Game1()
@@ -73,8 +72,8 @@ namespace MAHKFinalProject
 
             // load scenes
             _mainMenuScene = new MainMenuScene(this);
-            _levelSelectScene = new LevelSelectScene(this);
-            testScene = new FinalBattleLevel(this);
+          
+            _secondLevelScene = new FinalBattleLevel(this);
             _helpScene = new HelpScene(this);
             _aboutScene = new AboutScene(this);
             _rankingScene = new RankingScene(this);
@@ -119,36 +118,38 @@ namespace MAHKFinalProject
             int index = _mainMenuScene.MenuComponent.SelectedIndex;
             if (_mainMenuScene.Enabled)
             {
-                if(index == 5 && ks.IsKeyDown(Keys.Enter))
+                if(index == 1 && ks.IsKeyDown(Keys.Enter))
                 {
                     _mainMenuScene.Hide();
                     // reset game
-                    testScene = new FinalBattleLevel(this);
-                    testScene.Show();
+                    //Level 2
+                    _secondLevelScene = new FinalBattleLevel(this);
+                    _secondLevelScene.Show();
 
-                }else if (index == 4 && ks.IsKeyDown(Keys.Enter))
+                }else if (index == 5 && ks.IsKeyDown(Keys.Enter))
                 {
                     hideAllScenes();
                     Exit();
                 }
                 else if (index == 0 && ks.IsKeyDown(Keys.Enter))
                 {
-                    //Level Select
+                    //Level 1
                     _mainMenuScene.Hide();
+                    _firstLevelScene = new FirstLevelScene(this);
                     _firstLevelScene.Show();
                 }
-                else if (index == 1 && ks.IsKeyDown(Keys.Enter))
+                else if (index == 2 && ks.IsKeyDown(Keys.Enter))
                 {
                     _mainMenuScene.Hide();
                     _helpScene.Show();
                 }
-                else if (index == 2 && ks.IsKeyDown(Keys.Enter))
+                else if (index == 3 && ks.IsKeyDown(Keys.Enter))
                 {
                     _mainMenuScene.Hide();
                     _aboutScene = new AboutScene(this);
                     _aboutScene.Show();
                 }
-                else if (index == 3 && ks.IsKeyDown(Keys.Enter))
+                else if (index == 4 && ks.IsKeyDown(Keys.Enter))
                 {
                     _mainMenuScene.Hide();
                     _rankingScene = new RankingScene(this);
@@ -169,7 +170,7 @@ namespace MAHKFinalProject
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(new Color(18,11,21,1));
 
       
             base.Draw(gameTime);

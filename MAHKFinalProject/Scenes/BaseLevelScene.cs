@@ -1,5 +1,6 @@
 ﻿using MAHKFinalProject.DrawableComponents;
 using MAHKFinalProject.GameComponents;
+using MAHKFinalProject.Helpers;
 using MAHKFinalProject.LevelSerialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,6 +27,10 @@ namespace MAHKFinalProject.Scenes
         protected SpriteFont _font;
         protected BeatLevel _loadedLevel;
 
+        public Texture2D _bg;
+        Rectangle _bgRect;
+        bool bgLoaded = false;
+
         public Action OnLevelEnd;
         protected bool levelEnded = false;
         protected int framesToEndGame = 60* 2;
@@ -47,7 +52,6 @@ namespace MAHKFinalProject.Scenes
 
 
 
-
             scoreManager = new ScoreManager();
             _levelConductor = new Conductor(g, _levelName, _song, _bpm);
 
@@ -59,12 +63,28 @@ namespace MAHKFinalProject.Scenes
 
             _loadedLevel = LoadBeatLevel();
 
+            try
+            {
+
+            _bg = g.Content.Load<Texture2D>("Backgrounds/" + _levelName + "BG");
+                bgLoaded = true;
+             }catch (Exception ex)
+            {
             
+            }
+            _bgRect = new Rectangle(0, 0, (int)SharedVars.STAGE.X, (int)SharedVars.STAGE.Y); 
         }
 
         public Queue<VisualizedNote> SpawnedNotes { get; set; }
 
-        
+        public override void Draw(GameTime gameTime)
+        {
+            g.SpriteBatch.Begin(SpriteSortMode.BackToFront);
+            if(bgLoaded) g.SpriteBatch.Draw(_bg, Vector2.Zero,_bgRect, Color.Wheat * 0.1f,0f,Vector2.Zero,1f,SpriteEffects.None,layerDepth:1f);
+            g.SpriteBatch.End();
+            base.Draw(gameTime);
+        }
+
         public override void Update(GameTime gameTime)
         {
             if (levelEnded) return;

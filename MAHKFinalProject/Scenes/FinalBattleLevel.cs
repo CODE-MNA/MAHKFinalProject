@@ -194,7 +194,7 @@ namespace MAHKFinalProject.Scenes
         public override void Draw(GameTime gameTime)
         {
             g.SpriteBatch.Begin();
-            g.SpriteBatch.DrawString(_font,scoreManager.CurrentScore.ToString(),new Vector2(600, 30),Color.Bisque);
+            g.SpriteBatch.DrawString(_font,"Score : " + scoreManager.CurrentScore.ToString(),new Vector2(600, 30),Color.Bisque);
 
             if (freestyleMode)
             {
@@ -214,9 +214,9 @@ namespace MAHKFinalProject.Scenes
         {
             if (_zoneWithPlayer == toZone) return;
 
-            if(scoreManager.CurrentCombo < 4 && scoreManager.CurrentScore >=100)
+            if(scoreManager.CurrentCombo < 5 && scoreManager.CurrentScore >=100)
             {
-                scoreManager.CurrentScore -= 100;
+                scoreManager.CurrentScore -= 300 / scoreManager.CurrentCombo;
                 if(scoreManager.CurrentScore < 0)
                 {
                     scoreManager.CurrentScore = 0;

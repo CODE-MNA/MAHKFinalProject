@@ -59,6 +59,8 @@ namespace MAHKFinalProject.Scenes
             _spriteBatch.DrawString(_spriteFont, "Waterflame - Final Battle", initPos, Color.White);
             initPos.Y += _spriteFont.LineSpacing * 2;
 
+            _spriteBatch.DrawString(_spriteFont, "Backgrounds from Vecteezy", initPos, Color.White);
+            initPos.Y += _spriteFont.LineSpacing * 2;
             _spriteBatch.DrawString(_spriteFont, "Thanks!", initPos, Color.White);
             initPos.Y += _spriteFont.LineSpacing * 2;
 
