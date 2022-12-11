@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace MAHKFinalProject.Scenes
 {
-    public class BaseLevelScene : GameScene
+    public abstract class BaseLevelScene : GameScene
     {
         //Take it to abstract base Level
         protected Conductor _levelConductor;
@@ -61,7 +61,7 @@ namespace MAHKFinalProject.Scenes
 
         public Queue<VisualizedNote> SpawnedNotes { get; set; }
 
-
+        
         public override void Update(GameTime gameTime)
         {
             if (levelEnded) return;
@@ -113,6 +113,8 @@ namespace MAHKFinalProject.Scenes
 
                 if (frontNote._position.Y > Helpers.SharedVars.STAGE.Y - 1)
                 {
+                    SpawnedNotes.Dequeue();
+
                     DeregisterRecentNote();
                     return;
                 }
@@ -122,6 +124,7 @@ namespace MAHKFinalProject.Scenes
                 {
 
                     frontNote.ActivateNote();
+                    SpawnedNotes.Dequeue();
 
                     DeregisterRecentNote();
 
@@ -149,9 +152,8 @@ namespace MAHKFinalProject.Scenes
 
         }
 
-        void DeregisterRecentNote()
+        protected void DeregisterRecentNote()
         {
-            SpawnedNotes.Dequeue();
             if(_loadedLevel.NoteList.Count > 0)
             {
             _loadedLevel.NoteList.RemoveAt(0);
@@ -165,5 +167,7 @@ namespace MAHKFinalProject.Scenes
             return _levelFileHandler.LoadRythmFromFile(_levelName + ".rdat");
 
         }
+
+        protected abstract void ImplementNoteConstruction();
     }
 }

@@ -20,7 +20,7 @@ namespace MAHKFinalProject.DrawableComponents
         float _velocityFall;
         public Vector2 _targetPos;
 
-        FirstLevelScene _levelScene;
+        BaseLevelScene _levelScene;
 
         // temp
         public DropletLane _lane;
@@ -61,7 +61,7 @@ namespace MAHKFinalProject.DrawableComponents
             
             base.Draw(gameTime);    
         }
-        public Droplet(Game game, float hitBeat, Vector2 position,Vector2 target, Conductor conductor, FirstLevelScene level, DropletLane lane) : base(game, hitBeat ,position , conductor, level)
+        public Droplet(Game game, float hitBeat, Vector2 position,Vector2 target, Conductor conductor, BaseLevelScene level, DropletLane lane) : base(game, hitBeat ,position , conductor, level)
         {
             g = (Game1)game;
             _texture = g.Content.Load<Texture2D>("DestroyedSquare");

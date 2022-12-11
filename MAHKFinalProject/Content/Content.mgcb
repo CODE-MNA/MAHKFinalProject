@@ -111,11 +111,17 @@
 /processorParam:Quality=Best
 /build:Songs/WF_EndgameSong.mp3
 
-#begin Songs/WF_FinalBattle.mp3
+#begin Songs/WF_EndgameSong.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Songs/WF_FinalBattle.mp3
+/build:Songs/WF_EndgameSong.mp3
+
+#begin Songs/WF_FinalBattleSong.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Songs/WF_FinalBattleSong.mp3
 
 #begin yellowFlash.png
 /importer:TextureImporter

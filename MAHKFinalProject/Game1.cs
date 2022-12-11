@@ -16,7 +16,6 @@ namespace MAHKFinalProject
 
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
 
-        FirstLevelScene testScene;
         public bool Paused;
         public Action OnPause;
         public Action OnUnPause;
@@ -32,6 +31,9 @@ namespace MAHKFinalProject
         // Ranking Scene
         private RankingScene _rankingScene;
         private KeyboardState _oldKeyboardState;
+
+        private FirstLevelScene _firstLevelScene;
+        private FinalBattleLevel testScene;
 
         public SpriteFont GlobalFont { get; set; }
         public Game1()
@@ -69,15 +71,14 @@ namespace MAHKFinalProject
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             GlobalFont = this.Content.Load<SpriteFont>("Fonts/regularFont");
 
-            // TODO: use this.Content to load your game content here
             // load scenes
             _mainMenuScene = new MainMenuScene(this);
             _levelSelectScene = new LevelSelectScene(this);
-            testScene = new FirstLevelScene(this);
+            testScene = new FinalBattleLevel(this);
             _helpScene = new HelpScene(this);
             _aboutScene = new AboutScene(this);
             _rankingScene = new RankingScene(this);
-
+            _firstLevelScene = new FirstLevelScene(this);
             // hide all scenes
             hideAllScenes();
 
@@ -122,7 +123,7 @@ namespace MAHKFinalProject
                 {
                     _mainMenuScene.Hide();
                     // reset game
-                    testScene = new FirstLevelScene(this);
+                    testScene = new FinalBattleLevel(this);
                     testScene.Show();
 
                 }else if (index == 4 && ks.IsKeyDown(Keys.Enter))
@@ -132,8 +133,9 @@ namespace MAHKFinalProject
                 }
                 else if (index == 0 && ks.IsKeyDown(Keys.Enter))
                 {
+                    //Level Select
                     _mainMenuScene.Hide();
-                    _levelSelectScene.Show();
+                    _firstLevelScene.Show();
                 }
                 else if (index == 1 && ks.IsKeyDown(Keys.Enter))
                 {
@@ -169,8 +171,7 @@ namespace MAHKFinalProject
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
-
+      
             base.Draw(gameTime);
         }
     }

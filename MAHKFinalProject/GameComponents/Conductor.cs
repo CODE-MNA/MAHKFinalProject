@@ -18,20 +18,23 @@ namespace MAHKFinalProject.GameComponents
             set { _stageName = value; }
         }
         Song _song;
-        float _bpm;
+        public float _bpm;
         Game1 g;
-     
 
-        public Conductor(Game game, string stageName, Song song, float bpm) : base(game)
+        public SyncMode Mode { get; set; } = SyncMode.Beats;
+
+        public Conductor(Game game, string stageName, Song song, float bpm, SyncMode mode = SyncMode.Beats) : base(game)
         {
             g = (Game1)game;
             StageName = stageName;
-        
+            
             _song = song;
             this._bpm = bpm;
 
             g.OnPause += ()=>this.PauseSong();
             g.OnUnPause += ()=>this.ContinueSong();
+
+            Mode = mode;
 
         }
 
@@ -126,5 +129,7 @@ namespace MAHKFinalProject.GameComponents
 
         public bool FadingTriggered { get; private set; }   
        public bool HasStarted { get; private set; }
+
+        public enum SyncMode { Beats, Seconds}
     }
 }

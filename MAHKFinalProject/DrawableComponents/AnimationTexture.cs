@@ -29,6 +29,10 @@ namespace MAHKFinalProject.DrawableComponents
         private List<Rectangle> _frames = new List<Rectangle>();
         public Action OnAnimationStopped;
 
+        bool _isPlaying = false;
+        bool _isLooping = false;
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -37,13 +41,15 @@ namespace MAHKFinalProject.DrawableComponents
         /// <param name="cellWidth">each frame's width</param>
         /// <param name="cellHeight">each frame's height</param>
         /// <param name="delay">a period until change to next frame </param>
-        public AnimationTexture(Game game, Texture2D texture, float cellWidth, float cellHeight, int delay) : base(game)
+        public AnimationTexture(Game game, Texture2D texture, float cellWidth, float cellHeight, int delay, bool playOnSpawn = true, bool loop = false) : base(game)
         {
             Game1 g = (Game1) game;
             _texture = texture;
             _cellWidth = cellWidth;
             _cellHeight = cellHeight;
             _delay = delay;
+
+            _isPlaying = playOnSpawn;
 
             int rows = texture.Height / (int)_cellHeight;
             int cols = texture.Width / (int) _cellWidth;
@@ -71,8 +77,22 @@ namespace MAHKFinalProject.DrawableComponents
             return _frames[_frameIndex];
         }
 
+        public void StartPlaying()
+        {
+            _isPlaying = true;
+            _frameIndex = 0;
+        }
+
+        public void StopPlaying()
+        {
+            _isPlaying = false;
+            _frameIndex = 0;
+        }
+
         public override void Update(GameTime gameTime)
         {
+            if (!_isPlaying) return;
+
             // change frames
             if (_frameIndex >= 0)
             {
@@ -83,8 +103,18 @@ namespace MAHKFinalProject.DrawableComponents
                     _delayCount = 0;
                     if (_frameIndex == _frames.Count)
                     {
-                        OnAnimationStopped?.Invoke();
-                        _frameIndex = -1;
+
+                        if (_isLooping)
+                        {
+                            _frameIndex = 0;
+                            
+                        }
+                        else
+                        {
+                            OnAnimationStopped?.Invoke();
+                            _frameIndex = 0;
+                            _isPlaying = false;
+                        }
                     }
                 }
             }

@@ -46,22 +46,8 @@ namespace MAHKFinalProject.Scenes
 
             }
 
-            //Droplet Code
-            foreach (float dropTime in _loadedLevel.NoteList )
-            {
-                DropletLane laneForNewDrop = GetRandomLane();
-
-
-                Vector2 spawnpoint = new Vector2(laneForNewDrop.dropletSpawnPos.X-10,laneForNewDrop.dropletSpawnPos.Y);
-
-                hitYLine = spawnpoint.Y + SharedVars.STAGE.Y - 160;
-                Droplet drop = new Droplet(g, dropTime,new Vector2(spawnpoint.X,spawnpoint.Y), new Vector2(spawnpoint.X,hitYLine) ,_levelConductor,this, laneForNewDrop);
-                
-                AssignEventHandlers(drop);
-                
-                this.GameComponents.Add(drop);
-            }
-
+            ImplementNoteConstruction(); 
+           
             int dashNumber = (int)SharedVars.STAGE.X / (int)_font.MeasureString("----").X;
 
             for (int i = 0; i <= dashNumber; i++)
@@ -79,7 +65,7 @@ namespace MAHKFinalProject.Scenes
         {
             // record score
             ScoreFileManager scoreFileManager = new ScoreFileManager();
-            scoreFileManager.recordScore(base.scoreManager.CurentScore);
+            scoreFileManager.recordScore(base.scoreManager.CurrentScore);
         }
 
         public override void Initialize()
@@ -89,7 +75,7 @@ namespace MAHKFinalProject.Scenes
 
         public override void Draw(GameTime gameTime)
         {
-            string scoreText = $"Score: {scoreManager.CurentScore.ToString()}";
+            string scoreText = $"Score: {scoreManager.CurrentScore.ToString()}";
 
             g.SpriteBatch.Begin();
             g.SpriteBatch.DrawString(_font, scoreText, new Vector2(280, 30), Color.White);
@@ -97,7 +83,7 @@ namespace MAHKFinalProject.Scenes
             g.SpriteBatch.DrawString(_font, dashes, new Vector2(0,hitYLine - 40),Color.Blue);
             if (base.levelEnded)
             {
-                g.SpriteBatch.DrawString(endGameFont, "Game End, Your Score was : " + scoreManager.CurentScore, new Vector2(SharedVars.STAGE.X / 2, SharedVars.STAGE.Y / 2), Color.White);
+                g.SpriteBatch.DrawString(endGameFont, "Game End, Your Score was : " + scoreManager.CurrentScore, new Vector2(SharedVars.STAGE.X / 2, SharedVars.STAGE.Y / 2), Color.White);
             }
             g.SpriteBatch.End();
 
@@ -149,7 +135,7 @@ namespace MAHKFinalProject.Scenes
                     scoreManager.CurrentCombo = 0;
                 }
 
-                scoreManager.CurentScore += (int)MathF.Floor(tapScore);
+                scoreManager.CurrentScore += (int)MathF.Floor(tapScore);
 
                 Droplet drop  = (Droplet)note;
 
@@ -187,5 +173,23 @@ namespace MAHKFinalProject.Scenes
             base.Update(gameTime);
         }
 
+        protected override void ImplementNoteConstruction()
+        {
+            foreach (float dropTime in _loadedLevel.NoteList)
+            {
+                DropletLane laneForNewDrop = GetRandomLane();
+
+
+                Vector2 spawnpoint = new Vector2(laneForNewDrop.dropletSpawnPos.X - 10, laneForNewDrop.dropletSpawnPos.Y);
+
+                hitYLine = spawnpoint.Y + SharedVars.STAGE.Y - 160;
+                Droplet drop = new Droplet(g, dropTime, new Vector2(spawnpoint.X, spawnpoint.Y), new Vector2(spawnpoint.X, hitYLine), _levelConductor, this, laneForNewDrop);
+
+                AssignEventHandlers(drop);
+
+                this.GameComponents.Add(drop);
+            }
+
+        }
     }
 }

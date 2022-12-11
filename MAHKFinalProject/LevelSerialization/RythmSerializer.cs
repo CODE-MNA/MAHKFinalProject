@@ -13,14 +13,24 @@ namespace Prototype.Serialization
 
         public BeatLevel Deserialize(string notesAsString)
         {
- 
 
 
-            List<string> waves = notesAsString.Split('\n').ToList();
+            List<string> parts = notesAsString.Split("EVENTS").ToList();
 
+            List<string> waves = parts[0].Split('\n').ToList();
+
+            List<string> eventStrings = null;
+
+            if(parts.Count > 1)
+            {
+                parts[1].Split('\n').ToList();
+            }
+           
+          
             List<float> timings = new List<float>();
           
-
+            List<float> events = new List<float>();
+            
             foreach (string line in waves)
             {
                 //string[] parts = line.Split('-');
@@ -29,18 +39,46 @@ namespace Prototype.Serialization
                 //    //notes.Add(new Note(float.Parse(parts[0]), int.Parse(parts[1])));
 
                 //}
-                timings.Add(float.Parse(line));
+                try
+                {
+                    timings.Add(float.Parse(line));
+
+                }
+                catch (FormatException)
+                {
+                    continue;
+                }
 
             }
+
+            if(parts.Count > 1 && eventStrings != null)
+            {
+                foreach (var line in eventStrings)
+                {
+
+                    try
+                    {
+
+                        events.Add(float.Parse(line));
+                    }
+                    catch (FormatException)
+                    {
+                        continue;
+                    }
+                }
+
+            }
+
             return new BeatLevel()
             {
-                NoteList = timings
+                NoteList = timings,
+                EventList = events
             };
         }
 
         public string Serialize(BeatLevel notes)
         {
-            throw new NotImplementedException();
+           
 
             string output = "";
             foreach (var item in notes.NoteList)

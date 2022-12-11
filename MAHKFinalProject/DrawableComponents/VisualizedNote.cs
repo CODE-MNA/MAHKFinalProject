@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using static MAHKFinalProject.GameComponents.Conductor;
 
 namespace MAHKFinalProject.DrawableComponents
 {
@@ -30,8 +31,8 @@ namespace MAHKFinalProject.DrawableComponents
         protected Conductor _conductor;
         protected float DELAY_BETWEEN_SPAWN_AND_HIT = 1f;
 
-
-        protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor, FirstLevelScene LEVEL) : base(game)
+        SyncMode _syncMode;
+        protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor, BaseLevelScene LEVEL) : base(game)
         {
            
             HitBeat = hitBeat;
@@ -42,6 +43,13 @@ namespace MAHKFinalProject.DrawableComponents
             _conductor = conductor;
             _endSeconds = _conductor.GetSecondsFromBeat(HitBeat);
 
+            _syncMode = _conductor.Mode;
+
+            if(_syncMode == SyncMode.Seconds)
+            {
+                //Convert to seconds
+                DELAY_BETWEEN_SPAWN_AND_HIT = (DELAY_BETWEEN_SPAWN_AND_HIT * 60)/_conductor._bpm;
+            }
         }
 
         #region Transitions
@@ -72,19 +80,34 @@ namespace MAHKFinalProject.DrawableComponents
 
         protected float GetInterpolationValue()
         {
+            if(_syncMode == SyncMode.Seconds)
+            {
+                return (DELAY_BETWEEN_SPAWN_AND_HIT - (HitBeat - (float)_conductor.GetSongSeconds()) / DELAY_BETWEEN_SPAWN_AND_HIT);
+            }
+
             return (DELAY_BETWEEN_SPAWN_AND_HIT - (HitBeat - _conductor.GetCurrentBeat()/2)) / DELAY_BETWEEN_SPAWN_AND_HIT;
         }
 
 
         public virtual void UpdateNotSpawned(GameTime gameTime)
         {
-          
-
-            if(MathF.Abs(HitBeat - _conductor.GetCurrentBeat()/2) < DELAY_BETWEEN_SPAWN_AND_HIT && _conductor.GetCurrentBeat() > 0)
+            if (_syncMode == SyncMode.Seconds)
             {
-              
-                SpawnNote();
-                
+
+                if (MathF.Abs(HitBeat - (float)_conductor.GetSongSeconds()) < DELAY_BETWEEN_SPAWN_AND_HIT && _conductor.GetCurrentBeat() > 0)
+                {
+                    SpawnNote();
+                }
+            }
+            else
+            {
+                if (MathF.Abs(HitBeat - _conductor.GetCurrentBeat() / 2) < DELAY_BETWEEN_SPAWN_AND_HIT && _conductor.GetCurrentBeat() > 0)
+                {
+
+                    SpawnNote();
+
+                }
+
             }
 
         }

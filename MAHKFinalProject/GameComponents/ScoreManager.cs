@@ -8,7 +8,7 @@ namespace MAHKFinalProject.GameComponents
 {
     public class ScoreManager
     {
-        public int CurentScore { get; set; }
+        public int CurrentScore { get; set; }
 
         public int CurrentCombo { get; set; }
 

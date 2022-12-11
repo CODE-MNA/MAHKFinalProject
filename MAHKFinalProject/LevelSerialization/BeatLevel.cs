@@ -10,5 +10,7 @@ namespace MAHKFinalProject.LevelSerialization
     public class BeatLevel
     {
         public List<float> NoteList { get; set; }
+
+        public List<float> EventList { get; set; }
     }
 }
