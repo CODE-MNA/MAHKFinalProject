@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static MAHKFinalProject.Helpers.SharedVars;
 
 namespace MAHKFinalProject.DrawableComponents
 {
@@ -26,6 +27,9 @@ namespace MAHKFinalProject.DrawableComponents
 
         AnimationTexture anim;
 
+        float diffDist;
+        Vector2 _initPos;
+
         public override Keys GetAssignedKey()
         {
             return _lane.TriggerKey;
@@ -34,6 +38,8 @@ namespace MAHKFinalProject.DrawableComponents
 
         public override void Initialize()
         {
+            //Center + pos - origin
+            
             
             base.Initialize();
         }
@@ -49,7 +55,7 @@ namespace MAHKFinalProject.DrawableComponents
 
 /*            g.SpriteBatch.Draw(_texture, new Rectangle((int)_position.X,(int)_position.Y,_texture.Width,_texture.Height), Color.AntiqueWhite);*/
 
-            g.SpriteBatch.Draw(anim.GetAnimatedTexture(), _position, anim.GetCurrentFrame(), Color.AntiqueWhite);
+            g.SpriteBatch.Draw(anim.GetAnimatedTexture(), _position, anim.GetCurrentFrame(), Color.AntiqueWhite,0,Vector2.Zero,scale:0.5f,SpriteEffects.None,0);
 
             g.SpriteBatch.End();
             
@@ -58,31 +64,33 @@ namespace MAHKFinalProject.DrawableComponents
         public Droplet(Game game, float hitBeat, Vector2 position,Vector2 target, Conductor conductor, TestLevelScene level, DropletLane lane) : base(game, hitBeat ,position , conductor, level)
         {
             g = (Game1)game;
-            _texture = g.Content.Load<Texture2D>("droplet");
+            _texture = g.Content.Load<Texture2D>("DestroyedSquare");
             _targetPos = target;
             Status = NoteStatus.NotSpawned;
 
             _levelScene = level;
             _lane = lane;
-<<<<<<< HEAD
-          
-            
-            // anim.OnAnimationStopped += ()=> EndNote();
-            
-=======
->>>>>>> 5eef1de456e9fa9559c3c4e8187a3f9ae1f5bdcc
 
             // set animation class
-            anim = new AnimationTexture(game, _texture, 64.0f, 64.0f, 2);
+            anim = new AnimationTexture(game, _texture, 64.0f, 64.0f, 1);
             // when the droplet is hitted, droplet is going to disappear after animating
             anim.OnAnimationStopped += () => base.EndNote(); 
+
         }
 
 
         public override void SpawnNote()
         {
             base.SpawnNote();
-            _velocityFall = (_targetPos.Y - _position.Y) / diffSeconds;
+            diffDist = (_targetPos.Y - _position.Y);
+            _velocityFall =diffDist  / diffSeconds;
+
+            _initPos = _position;
+
+            if(diffSeconds <= 0)
+            {
+                _velocityFall = 160;
+            }
 
             //Enque
             _levelScene.SpawnedNotes.Enqueue(this);
@@ -92,10 +100,6 @@ namespace MAHKFinalProject.DrawableComponents
         public override void UpdateActive(GameTime gameTime)
         {
 
-<<<<<<< HEAD
-            //play animation
-            
-=======
             //DeQueue
 
 
@@ -104,7 +108,6 @@ namespace MAHKFinalProject.DrawableComponents
 
             //Score
 
->>>>>>> 5eef1de456e9fa9559c3c4e8187a3f9ae1f5bdcc
         }
 
         public override void UpdateEnded(GameTime gameTime)
@@ -116,8 +119,24 @@ namespace MAHKFinalProject.DrawableComponents
       
         public override void UpdateSpawned(GameTime gameTime)
         {
-            //Instead of using update, use conductors update time
-                _position = new Vector2(_position.X, _position.Y + _velocityFall / 220);
+
+            if (g.Paused)
+            {
+                return;
+            }
+
+            //Dbefore - (HitBeat - getcurrentbeat)/ dbefore
+
+            
+            float interpolatedValue = GetInterpolationValue();
+
+
+            //need to smooth further
+            _position = Vector2.Lerp(_initPos, _targetPos, interpolatedValue);
+
+            //0.174
+            //tdiff
+                //_position = new Vector2(_position.X, _position.Y + (diffDist*(float)gameTime.ElapsedGameTime.TotalSeconds/0.348f) );
         
         }
         //float GetLerpY()
@@ -135,23 +154,25 @@ namespace MAHKFinalProject.DrawableComponents
 
         
 
-        public override float CalculateScore()
-        {
-            float finalscore = 200;
+        //public override float CalculateScore()
+        //{
+        //    float finalscore = 200;
 
-            finalscore -= (MathF.Abs((float)_targetPos.Y - (float)_position.Y));
+        //    finalscore -= (MathF.Abs((float)_targetPos.Y - (float)_position.Y));
 
-            if (finalscore > 185 && _position.Y >= _targetPos.Y  || finalscore > 187&& _position.Y < _targetPos.Y)
-            {
+        //    Vector2 impPos = new Vector2((float)_position.X + anim.GetCurrentFrame().Width/2, (float)_position.Y + anim.GetCurrentFrame().Height/2);
+
+        //    if (finalscore > 175 && impPos.Y >= _targetPos.Y  || finalscore > 179&& impPos.Y < _targetPos.Y)
+        //    {
               
-                return finalscore * 3.25f;
-            }
+        //        return finalscore * 3f;
+        //    }
 
 
-            if (finalscore <= 0) finalscore = 0;
+        //    if (finalscore <= 0) finalscore = 0;
 
-            return finalscore;
-        }
+        //    return finalscore + (finalscore * 1.60f);
+        //}
 
     }
 }

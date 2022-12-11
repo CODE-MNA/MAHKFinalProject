@@ -21,13 +21,14 @@ namespace Prototype.Components
         int frameIndex = -1;
         const int ROWS = 5;
         const int COLS = 5;
-        public ExplosionAnimation(Game game, SpriteBatch spriteBatch, Texture2D texture, Vector2 position, float delayBetweenFrames) : base(game)
+        public ExplosionAnimation(Game game, SpriteBatch spriteBatch, Texture2D texture, Vector2 position, float framesForDelay) : base(game)
         {
             _spriteBatch = spriteBatch;
             _texture = texture;
             _oneImageDimension = new Vector2(_texture.Width / COLS, _texture.Height / ROWS);
             _position = new Vector2(position.X - _oneImageDimension.X / 2, position.Y - _oneImageDimension.Y / 2);
-            originalDelay = delayBetweenFrames;
+            originalDelay = framesForDelay;
+            delay = 0;
             frames = new List<Rectangle>();
             for (int i = 0; i < ROWS; i++)
             {
@@ -55,21 +56,21 @@ namespace Prototype.Components
 
         public override void Update(GameTime gameTime)
         {
-            if (delay <= 0)
+            if (delay >= originalDelay)
             {
-                delay = originalDelay;
+                delay = 0;
                 frameIndex++;
             }
             else
             {
-                delay -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                delay++;
             }
 
 
             if (frameIndex >= frames.Count)
             {
                 this.Enabled = false;
-              
+              this.Visible = false;
             }
 
             base.Update(gameTime);

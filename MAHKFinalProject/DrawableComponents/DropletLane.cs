@@ -35,6 +35,8 @@ namespace MAHKFinalProject.DrawableComponents
         private Game1 g;
         private float alpha = 0f;
         private float _maxAlpha = 0.6f;
+      
+        private float fontAlpha;
 
         public Keys TriggerKey { get; set; }
         
@@ -68,6 +70,10 @@ namespace MAHKFinalProject.DrawableComponents
             
             g.SpriteBatch.Draw(_texture, _laneRect,new Color(Color.AliceBlue,alpha));
 
+        
+                g.SpriteBatch.DrawString(g.GlobalFont, this.TriggerKey.ToString(),_laneRect.Center.ToVector2(), Color.LightGoldenrodYellow * fontAlpha);
+           
+
             g.SpriteBatch.End();
             base.Draw(gameTime);
         }
@@ -77,6 +83,31 @@ namespace MAHKFinalProject.DrawableComponents
         public override void Update(GameTime gameTime)
         {
             KeyboardState ks = Keyboard.GetState();
+
+            if (ks.IsKeyDown(Keys.Tab))
+            {
+                if (fontAlpha <= 1)
+                {
+                    fontAlpha += 0.125f;
+                }
+                else
+                {
+                    fontAlpha = 1;
+                  
+                }
+            }
+            else
+            {
+                if (fontAlpha > 0)
+                {
+                    fontAlpha -= 0.15f;
+
+                }
+                else
+                {
+                    fontAlpha = 0;
+                }
+            }
 
 
             if (flashing)
@@ -104,7 +135,10 @@ namespace MAHKFinalProject.DrawableComponents
                 }
             }
           
+           
 
+
+            _oldKbState = ks;
             base.Update(gameTime);
         }
 

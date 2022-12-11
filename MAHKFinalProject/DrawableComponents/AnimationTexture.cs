@@ -27,10 +27,6 @@ namespace MAHKFinalProject.DrawableComponents
         private int _delay = 10;
         private int _delayCount = 0;
         private List<Rectangle> _frames = new List<Rectangle>();
-<<<<<<< HEAD
-        
-        public AnimationTexture(Game game, Texture2D texture, Vector2 position, float cellWidth, float cellHeight, int delay) : base(game)
-=======
         public Action OnAnimationStopped;
 
         /// <summary>
@@ -42,7 +38,6 @@ namespace MAHKFinalProject.DrawableComponents
         /// <param name="cellHeight">each frame's height</param>
         /// <param name="delay">a period until change to next frame </param>
         public AnimationTexture(Game game, Texture2D texture, float cellWidth, float cellHeight, int delay) : base(game)
->>>>>>> 5eef1de456e9fa9559c3c4e8187a3f9ae1f5bdcc
         {
             Game1 g = (Game1) game;
             _texture = texture;
