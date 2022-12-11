@@ -31,7 +31,7 @@ namespace MAHKFinalProject.DrawableComponents
         protected float DELAY_BETWEEN_SPAWN_AND_HIT = 1f;
 
 
-        protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor, TestLevelScene LEVEL) : base(game)
+        protected VisualizedNote(Game game,float hitBeat, Vector2 spawnPosition, Conductor conductor, FirstLevelScene LEVEL) : base(game)
         {
            
             HitBeat = hitBeat;

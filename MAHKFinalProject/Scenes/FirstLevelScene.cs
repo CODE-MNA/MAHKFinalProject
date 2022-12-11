@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace MAHKFinalProject.Scenes
 {
-    public class TestLevelScene : BaseLevelScene
+    public class FirstLevelScene : BaseLevelScene
     {
         List<DropletLane> Lanes;
         Texture2D _laneTexture;
@@ -28,7 +28,7 @@ namespace MAHKFinalProject.Scenes
         //Decoration
         List<Rectangle> pulses;
   
-        public TestLevelScene(Game game) : base(game,"WF_Endgame",123)
+        public FirstLevelScene(Game game) : base(game,"WF_Endgame",123)
         {
             
             _laneTexture = g.Content.Load<Texture2D>("dropletLane");
@@ -97,7 +97,7 @@ namespace MAHKFinalProject.Scenes
             g.SpriteBatch.DrawString(_font, dashes, new Vector2(0,hitYLine - 40),Color.Blue);
             if (base.levelEnded)
             {
-                g.SpriteBatch.DrawString(endGameFont, "Game End", new Vector2(SharedVars.STAGE.X / 2, SharedVars.STAGE.Y / 2), Color.White);
+                g.SpriteBatch.DrawString(endGameFont, "Game End, Your Score was : " + scoreManager.CurentScore, new Vector2(SharedVars.STAGE.X / 2, SharedVars.STAGE.Y / 2), Color.White);
             }
             g.SpriteBatch.End();
 
@@ -141,7 +141,7 @@ namespace MAHKFinalProject.Scenes
 
                 if(tapScore >= perfectHitPoints)
                 {
-                    tapScore += tapScore + (25 * scoreManager.CurrentCombo);
+                    tapScore += tapScore + (200 * scoreManager.CurrentCombo);
                     scoreManager.CurrentCombo = scoreManager.CurrentCombo + 1;
                 }
                 else

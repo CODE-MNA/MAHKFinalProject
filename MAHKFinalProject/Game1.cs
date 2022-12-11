@@ -16,7 +16,7 @@ namespace MAHKFinalProject
 
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
 
-        TestLevelScene testScene;
+        FirstLevelScene testScene;
         public bool Paused;
         public Action OnPause;
         public Action OnUnPause;
@@ -73,7 +73,7 @@ namespace MAHKFinalProject
             // load scenes
             _mainMenuScene = new MainMenuScene(this);
             _levelSelectScene = new LevelSelectScene(this);
-            testScene = new TestLevelScene(this);
+            testScene = new FirstLevelScene(this);
             _helpScene = new HelpScene(this);
             _aboutScene = new AboutScene(this);
             _rankingScene = new RankingScene(this);
@@ -122,7 +122,7 @@ namespace MAHKFinalProject
                 {
                     _mainMenuScene.Hide();
                     // reset game
-                    testScene = new TestLevelScene(this);
+                    testScene = new FirstLevelScene(this);
                     testScene.Show();
 
                 }else if (index == 4 && ks.IsKeyDown(Keys.Enter))
