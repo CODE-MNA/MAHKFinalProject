@@ -17,7 +17,7 @@ namespace MAHKFinalProject.DrawableComponents
 
     public class Droplet : VisualizedNote
     {
-        float _velocityFall;
+        
         public Vector2 _targetPos;
 
         BaseLevelScene _levelScene;
@@ -83,14 +83,11 @@ namespace MAHKFinalProject.DrawableComponents
         {
             base.SpawnNote();
             diffDist = (_targetPos.Y - _position.Y);
-            _velocityFall =diffDist  / diffSeconds;
+           
 
             _initPos = _position;
 
-            if(diffSeconds <= 0)
-            {
-                _velocityFall = 160;
-            }
+         
 
             //Enque
             _levelScene.SpawnedNotes.Enqueue(this);

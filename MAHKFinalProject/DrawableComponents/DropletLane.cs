@@ -56,7 +56,7 @@ namespace MAHKFinalProject.DrawableComponents
             _laneRect = new Rectangle((int)spawnCorner.X, (int)spawnCorner.Y, width, height);
 
             dropletSpawnPos = new Vector2(spawnCorner.X + width/2, spawnCorner.Y + 10);
-            ImpactPos = new Vector2(dropletSpawnPos.X , dropletSpawnPos.Y + height - 20);
+            ImpactPos = new Vector2(dropletSpawnPos.X , dropletSpawnPos.Y + height - 40);
 
             alpha = 0f;
 

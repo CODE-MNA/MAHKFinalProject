@@ -111,7 +111,7 @@ namespace MAHKFinalProject.Scenes
                     return;
                 }
 
-                if (frontNote._position.Y > Helpers.SharedVars.STAGE.Y - 1)
+                if (frontNote._position.Y > Helpers.SharedVars.STAGE.Y - 100)
                 {
                     SpawnedNotes.Dequeue();
 

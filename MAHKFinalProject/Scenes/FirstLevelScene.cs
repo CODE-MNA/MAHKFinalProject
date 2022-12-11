@@ -83,7 +83,8 @@ namespace MAHKFinalProject.Scenes
             g.SpriteBatch.DrawString(_font, dashes, new Vector2(0,hitYLine - 40),Color.Blue);
             if (base.levelEnded)
             {
-                g.SpriteBatch.DrawString(endGameFont, "Game End, Your Score was : " + scoreManager.CurrentScore, new Vector2(SharedVars.STAGE.X / 2, SharedVars.STAGE.Y / 2), Color.White);
+                string overMessage = "Game End, Your Score was : " + scoreManager.CurrentScore;
+                g.SpriteBatch.DrawString(endGameFont, overMessage , new Vector2((SharedVars.STAGE.X / 2) - _font.MeasureString(overMessage).X, (SharedVars.STAGE.Y / 2) - _font.MeasureString(overMessage).Y), Color.White);
             }
             g.SpriteBatch.End();
 
@@ -183,6 +184,7 @@ namespace MAHKFinalProject.Scenes
                 Vector2 spawnpoint = new Vector2(laneForNewDrop.dropletSpawnPos.X - 10, laneForNewDrop.dropletSpawnPos.Y);
 
                 hitYLine = spawnpoint.Y + SharedVars.STAGE.Y - 160;
+            
                 Droplet drop = new Droplet(g, dropTime, new Vector2(spawnpoint.X, spawnpoint.Y), new Vector2(spawnpoint.X, hitYLine), _levelConductor, this, laneForNewDrop);
 
                 AssignEventHandlers(drop);

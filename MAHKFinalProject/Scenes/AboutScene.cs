@@ -44,10 +44,19 @@ namespace MAHKFinalProject.Scenes
             _spriteBatch.DrawString(_headerFont, "About Us", initPos, Color.White);
             initPos.Y += _spriteFont.LineSpacing * 3;
 
-            _spriteBatch.DrawString(_spriteFont, "Genius == Muhammad Noman Ahmed", initPos, Color.White);
+            _spriteBatch.DrawString(_spriteFont, "Muhammad Noman Ahmed", initPos, Color.White);
             initPos.Y += _spriteFont.LineSpacing * 2;
 
-            _spriteBatch.DrawString(_spriteFont, "(^_______^)? Hyunchul Kim", initPos, Color.White);
+            _spriteBatch.DrawString(_spriteFont, "(^_______^) Hyunchul Kim", initPos, Color.White);
+            initPos.Y += _spriteFont.LineSpacing * 2;
+
+
+            _spriteBatch.DrawString(_spriteFont, "Songs Used : ", initPos, Color.White);
+            initPos.Y += _spriteFont.LineSpacing;
+
+            _spriteBatch.DrawString(_spriteFont, "Waterflame - Endgame", initPos, Color.White);
+            initPos.Y += _spriteFont.LineSpacing;
+            _spriteBatch.DrawString(_spriteFont, "Waterflame - Final Battle", initPos, Color.White);
             initPos.Y += _spriteFont.LineSpacing * 2;
 
             _spriteBatch.DrawString(_spriteFont, "Thanks!", initPos, Color.White);

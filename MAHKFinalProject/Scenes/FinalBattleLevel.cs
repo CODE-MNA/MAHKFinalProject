@@ -1,4 +1,5 @@
 ﻿using MAHKFinalProject.DrawableComponents;
+using MAHKFinalProject.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -25,19 +26,22 @@ namespace MAHKFinalProject.Scenes
         int nextZoneNote;
         float modeChangeTime;
 
-        private float DEFAULT_MODE_TIME = 4;
+        private float DEFAULT_MODE_TIME = 20;
+
+        float hitXLine = 160;
+        List<Droplet> dropBeatNotes = new List<Droplet>();
 
         List<TeleportZone> zones = new List<TeleportZone>();
         TeleportZone _zoneWithPlayer;
         TeleportPlayer _player;
-
+        DropletLane _tempLane;
         public FinalBattleLevel(Game game) : base(game, "WF_FinalBattle", 73)
         {
             //This Level uses seconds to sync notes instead of beats
             _levelConductor.Mode = MAHKFinalProject.GameComponents.Conductor.SyncMode.Seconds;
 
             stay = 0;
-           _temp = g.Content.Load<Texture2D>("droplet");
+           _temp = g.Content.Load<Texture2D>("dropletLane");
 
             modeChangeTime = DEFAULT_MODE_TIME;
 
@@ -52,6 +56,18 @@ namespace MAHKFinalProject.Scenes
                 }
             }
 
+            _tempLane = new DropletLane(g, Vector2.One, 1, 1, _temp);
+            _tempLane.TriggerKey = Keys.K;
+
+            //Only fill till the event guy says
+            foreach (var item in _loadedLevel.NoteList)
+            {
+                if (item >= modeChangeTime) continue;
+                Droplet drop = new Droplet(g, item, SharedVars.STAGE / 2, new Vector2(hitXLine, 140), _levelConductor, this, _tempLane);
+                dropBeatNotes.Add(drop);
+            }
+
+            GameComponents.AddRange(dropBeatNotes);
          
         }
 
@@ -89,7 +105,16 @@ namespace MAHKFinalProject.Scenes
         {
             g.SpriteBatch.Begin();
             g.SpriteBatch.DrawString(_font,scoreManager.CurrentScore.ToString(),new Vector2(600, 30),Color.Bisque);
-        
+
+            if (freestyleMode)
+            {
+
+            }
+            else
+            {
+                g.SpriteBatch.Draw(_temp, new Rectangle(160, 0, 80, (int)SharedVars.STAGE.Y), Color.Azure);
+            }
+
             g.SpriteBatch.End();
 
             base.Draw(gameTime);
@@ -199,7 +224,7 @@ namespace MAHKFinalProject.Scenes
             
                     if (MathF.Abs(_loadedLevel.NoteList[0] - (float)_levelConductor.GetSongSeconds()) < 0.036f)
                     {
-
+                      
                         _loadedLevel.NoteList.RemoveAt(0);
                     }
               
