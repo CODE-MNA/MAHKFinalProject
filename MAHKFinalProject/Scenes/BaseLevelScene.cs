@@ -42,7 +42,7 @@ namespace MAHKFinalProject.Scenes
         protected float _bgAlpha;
         protected bool flashing = false;
      
-        protected float shakePower = 1f;
+        protected float shakePower = 2.2f;
         protected float effectOffset;
         protected Color _bgColor;
 
