@@ -100,6 +100,12 @@ namespace MAHKFinalProject.Scenes
         public override void Draw(GameTime gameTime)
         {
             g.SpriteBatch.Begin(SpriteSortMode.BackToFront);
+            if(_levelConductor.HasStarted == false)
+            {
+                string startMessage = "Press Space to Start";
+                g.SpriteBatch.DrawString(_font, startMessage, new Vector2((SharedVars.STAGE.X / 2) - _font.MeasureString(startMessage).X, (SharedVars.STAGE.Y / 2) - _font.MeasureString(startMessage).Y), Color.White);
+
+            }
             if (levelEnded)
             {
                 string overMessage = "Game End, Your Score was : " + scoreManager.CurrentScore;
@@ -189,7 +195,7 @@ namespace MAHKFinalProject.Scenes
             KeyboardState ks = Keyboard.GetState();
 
           
-            if (ms.LeftButton == ButtonState.Pressed && _oldState.LeftButton == ButtonState.Released)
+            if (ks.IsKeyDown(Keys.Space) && _oldKeyboardState.IsKeyUp(Keys.Space))
             {
 
                 if (!_levelConductor.HasStarted)
