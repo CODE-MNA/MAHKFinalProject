@@ -90,6 +90,13 @@ namespace MAHKFinalProject.Scenes
 
         public Queue<VisualizedNote> SpawnedNotes { get; set; }
 
+        public void RecordScores()
+        {
+            // record score
+            ScoreFileManager scoreFileManager = new ScoreFileManager(_levelName);
+            scoreFileManager.recordScore(scoreManager.CurrentScore);
+        }
+
         public override void Draw(GameTime gameTime)
         {
             g.SpriteBatch.Begin(SpriteSortMode.BackToFront);
@@ -255,6 +262,7 @@ namespace MAHKFinalProject.Scenes
         protected void TriggerFinishGame()
         {
             levelEnded = true;
+            RecordScores();
             OnLevelEnd?.Invoke();
 
         }

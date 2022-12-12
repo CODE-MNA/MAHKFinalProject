@@ -9,7 +9,12 @@ namespace MAHKFinalProject.GameComponents
 {
     public class ScoreFileManager
     {
-        private const string filepath = @"Scores/score.dat";
+        private string filepath = @"Scores/score.dat";
+
+        public ScoreFileManager(string levelName)
+        {
+            filepath = @"Scores/" + levelName + "Score.dat";
+        }
 
         public void recordScore(int score)
         {

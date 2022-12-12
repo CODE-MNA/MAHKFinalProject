@@ -56,17 +56,12 @@ namespace MAHKFinalProject.Scenes
             }
 
             // add event
-            base.OnLevelEnd += EndLevel;
+            
             endGameFont = g.Content.Load<SpriteFont>("Fonts/hilightFont");
         }
 
         // when the level's ended, it'll be called
-        public void EndLevel()
-        {
-            // record score
-            ScoreFileManager scoreFileManager = new ScoreFileManager();
-            scoreFileManager.recordScore(base.scoreManager.CurrentScore);
-        }
+    
 
         public override void Initialize()
         {
