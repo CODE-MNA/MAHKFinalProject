@@ -60,29 +60,29 @@ namespace MAHKFinalProject.Scenes
                 
                 
                 _spriteBatch.DrawString(_headerFont, "Ranks For Level 1", initPos, Color.White);
-                initPos.Y += _spriteFont.LineSpacing * 3;
+                initPos.Y += _spriteFont.LineSpacing * 2f;
 
                 foreach (var (item, index) in level1Scores.Select((item, index) => (item, index)))
                 {
                     string msg = $"Rank {index + 1} - {item} pts";
                     _spriteBatch.DrawString(_spriteFont, msg, initPos, Color.White);
-                    initPos.Y += _spriteFont.LineSpacing * 2;
+                    initPos.Y += _spriteFont.LineSpacing * 1.2f;
                 }
 
             }
             else
             {
                 _spriteBatch.DrawString(_spriteFont,"No Scores for Level 1.", initPos,Color.Crimson);
-                initPos.Y += _spriteFont.LineSpacing * 2;
+                initPos.Y += _spriteFont.LineSpacing * 1.2f;
 
             }
 
-
+            initPos.Y += _spriteFont.LineSpacing * 2f;
 
             if (level2Scores != null && level2Scores.Count > 0)
             {
                 _spriteBatch.DrawString(_headerFont, "Ranks For Level 2", initPos, Color.White);
-                initPos.Y += _spriteFont.LineSpacing * 3;
+                initPos.Y += _spriteFont.LineSpacing * 2f;
 
 
 
@@ -91,13 +91,13 @@ namespace MAHKFinalProject.Scenes
                 {
                     string msg = $"Rank {index + 1} - {item} pts";
                     _spriteBatch.DrawString(_spriteFont, msg, initPos, Color.White);
-                    initPos.Y += _spriteFont.LineSpacing * 2;
+                    initPos.Y += _spriteFont.LineSpacing * 1.2f;
                 }
             }
             else
             {
                 _spriteBatch.DrawString(_spriteFont, "No Scores for Level 2.", initPos, Color.Crimson);
-                initPos.Y += _spriteFont.LineSpacing * 2;
+                initPos.Y += _spriteFont.LineSpacing * 1.2f;
 
             }
             _spriteBatch.End();
