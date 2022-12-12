@@ -82,7 +82,7 @@ namespace MAHKFinalProject.DrawableComponents
             
                g.SpriteBatch.Draw(_anim.GetAnimatedTexture(),_position,rect, Color.AliceBlue );
 
-            g.SpriteBatch.DrawString(g.GlobalFont, ZoneKey.ToString(), new Vector2(Position.X, Position.Y - _HEIGHT/1.9f), Color.Green);
+            g.SpriteBatch.DrawString(g.GlobalFont, ZoneKey.ToString(), new Vector2(Position.X, Position.Y - _HEIGHT/1.9f), Color.LightGoldenrodYellow);
 
 
             g.SpriteBatch.End();

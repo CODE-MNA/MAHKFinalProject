@@ -28,7 +28,7 @@ namespace MAHKFinalProject.Scenes
         protected BeatLevel _loadedLevel;
 
         public Texture2D _bg;
-        Rectangle _bgRect;
+        protected Rectangle _bgRect;
         bool bgLoaded = false;
 
         public Action OnLevelEnd;

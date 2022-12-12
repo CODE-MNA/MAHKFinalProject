@@ -23,7 +23,7 @@ namespace Prototype.Serialization
 
             if(parts.Count > 1)
             {
-                parts[1].Split('\n').ToList();
+             eventStrings =   parts[1].Split('\n').ToList();
             }
            
           

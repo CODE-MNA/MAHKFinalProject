@@ -22,10 +22,11 @@ namespace MAHKFinalProject.Scenes
 
         public Action onFreestyleMode;
 
-        int nextZoneNote;
+      
         float modeChangeTime;
+       
 
-        private float DEFAULT_MODE_TIME = 54;
+        private float DEFAULT_MODE_TIME = 9;
 
         float hitXLine = 60;
         List<Droplet> dropBeatNotes = new List<Droplet>();
@@ -41,6 +42,8 @@ namespace MAHKFinalProject.Scenes
         int laneIncrement= 1;
         int counter = 0;
         private int numOffreeZones = 4;
+        private bool transitionFinished = false;
+        private float transitionAlpha = 0.8f;
 
         DropletLane GetNextLane()
         {
@@ -82,6 +85,7 @@ namespace MAHKFinalProject.Scenes
 
                     //Use the time from file if given
                     modeChangeTime = _loadedLevel.EventList[0];
+                    
                 }
             }
             InitializeLanes();
@@ -181,9 +185,9 @@ namespace MAHKFinalProject.Scenes
             foreach (TeleportZone zone in zones)
             {
                 float timeToNext = 1f;
-                if (nextZoneNote + 1 < _loadedLevel.NoteList.Count)
+                if (1 < _loadedLevel.NoteList.Count)
                 {
-                    timeToNext = _loadedLevel.NoteList[nextZoneNote + 1] - 0.27f - (float)_levelConductor.GetSongSeconds();
+                    timeToNext = _loadedLevel.NoteList[1] - 0.27f - (float)_levelConductor.GetSongSeconds();
                 }
 
                 zone.RefreshZoneAnimation(timeToNext);
@@ -195,19 +199,32 @@ namespace MAHKFinalProject.Scenes
         {
             g.SpriteBatch.Begin();
             g.SpriteBatch.DrawString(_font,"Score : " + scoreManager.CurrentScore.ToString(),new Vector2(600, 30),Color.Bisque);
+            g.SpriteBatch.DrawString(_font, "Count : " + _loadedLevel.NoteList.Count.ToString(), new Vector2(600, 240), Color.Bisque);
 
+
+
+
+            if (!freestyleMode)
+            {
+
+                g.SpriteBatch.Draw(_strumBarTexture, new Rectangle(180, 0, 80, (int)STAGE.Y), Color.Azure);
+
+            
+              
+            }
+        
+            g.SpriteBatch.End();
+     
+         
+            base.Draw(gameTime);
             if (freestyleMode)
             {
 
-            }
-            else
-            {
-                g.SpriteBatch.Draw(_strumBarTexture, new Rectangle(180, 0, 80, (int)STAGE.Y), Color.Azure);
-            }
+                g.SpriteBatch.Begin(SpriteSortMode.Immediate);
+                g.SpriteBatch.Draw(_strumBarTexture, Vector2.Zero, _bgRect, Color.Black * transitionAlpha, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth: 0f);
+                g.SpriteBatch.End();
 
-            g.SpriteBatch.End();
-
-            base.Draw(gameTime);
+            }
         }
 
         void MovePlayer(TeleportZone toZone)
@@ -241,6 +258,8 @@ namespace MAHKFinalProject.Scenes
                 return;
             }
 
+         
+          
 
 
             KeyboardState ks = Keyboard.GetState();
@@ -278,6 +297,20 @@ namespace MAHKFinalProject.Scenes
 
             if (freestyleMode)
             {
+                if (!transitionFinished)
+                {
+                    if (transitionAlpha > 0)
+                    {
+                        transitionAlpha -= 0.008f;
+
+                    }
+                    else
+                    {
+                        transitionAlpha = 0;
+                        transitionFinished = true;
+
+                    }
+                }
 
                 foreach (var zone in zones)
                 {
@@ -291,7 +324,7 @@ namespace MAHKFinalProject.Scenes
 
 
                 //Second Mode gameplay
-                if (MathF.Abs(_loadedLevel.NoteList[nextZoneNote] - (float)_levelConductor.GetSongSeconds()) < 0.036f)
+                if (MathF.Abs(_loadedLevel.NoteList[0] - (float)_levelConductor.GetSongSeconds()) < 0.02f)
                 {
 
                     if(_zoneWithPlayer.IsDangerous == false)
@@ -304,11 +337,11 @@ namespace MAHKFinalProject.Scenes
                         scoreManager.CurrentCombo = 0;
                     }
                     ChangeZones();
-                    _loadedLevel.NoteList.RemoveAt(0);
+                     _loadedLevel.NoteList.RemoveAt(0);
                 }
 
 
-
+              
                 base.Update(gameTime);
                 return;
 
@@ -318,7 +351,7 @@ namespace MAHKFinalProject.Scenes
          
 
             
-                    if (MathF.Abs(_loadedLevel.NoteList[0] - (float)_levelConductor.GetSongSeconds()) < 0.036f)
+                    if (MathF.Abs(_loadedLevel.NoteList[0] - (float)_levelConductor.GetSongSeconds()) < 0.026f)
                     {
                       
                         _loadedLevel.NoteList.RemoveAt(0);
