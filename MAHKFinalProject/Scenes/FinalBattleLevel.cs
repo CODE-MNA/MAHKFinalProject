@@ -24,7 +24,7 @@ namespace MAHKFinalProject.Scenes
 
       
         float modeChangeTime;
-       
+        int misses = 0;
 
         private float DEFAULT_MODE_TIME = 9;
 
@@ -107,7 +107,20 @@ namespace MAHKFinalProject.Scenes
                 dropBeatNotes.Add(drop);
             }
 
-   
+
+
+            OnLevelEnd += () =>
+            {
+                _player.Enabled = false;
+                _player.Visible = false;
+
+                foreach (TeleportZone zone in zones)
+                {
+                    zone.IsDangerous = false;
+                    zone.Enabled = false;
+                    zone.Visible = false;
+                }
+            };
 
             GameComponents.AddRange(dropBeatNotes);
          
@@ -201,6 +214,7 @@ namespace MAHKFinalProject.Scenes
             g.SpriteBatch.DrawString(_font,"Score : " + scoreManager.CurrentScore.ToString(),new Vector2(600, 30),Color.Bisque);
 
 
+          
 
 
             if (!freestyleMode)
@@ -224,6 +238,8 @@ namespace MAHKFinalProject.Scenes
                 g.SpriteBatch.End();
 
             }
+
+
         }
 
         void MovePlayer(TeleportZone toZone)
@@ -340,7 +356,8 @@ namespace MAHKFinalProject.Scenes
                     else
                     {
                         scoreManager.CurrentCombo = 0;
-                        scoreManager.CurrentScore -= 40;
+                        scoreManager.CurrentScore -= 50 * misses ;
+                        misses++;
                     }
                     ChangeZones();
                      _loadedLevel.NoteList.RemoveAt(0);

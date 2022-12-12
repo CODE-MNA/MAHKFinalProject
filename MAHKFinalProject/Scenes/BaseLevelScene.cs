@@ -100,7 +100,12 @@ namespace MAHKFinalProject.Scenes
         public override void Draw(GameTime gameTime)
         {
             g.SpriteBatch.Begin(SpriteSortMode.BackToFront);
-            if(bgLoaded) g.SpriteBatch.Draw(_bg, Vector2.Zero,_bgRect, _bgColor * _bgAlpha,0f,Vector2.Zero,1f,SpriteEffects.None,layerDepth:1f);
+            if (levelEnded)
+            {
+                string overMessage = "Game End, Your Score was : " + scoreManager.CurrentScore;
+                g.SpriteBatch.DrawString(_font, overMessage, new Vector2((SharedVars.STAGE.X / 2) - _font.MeasureString(overMessage).X, (SharedVars.STAGE.Y / 2) - _font.MeasureString(overMessage).Y), Color.White);
+            }
+            if (bgLoaded) g.SpriteBatch.Draw(_bg, Vector2.Zero,_bgRect, _bgColor * _bgAlpha,0f,Vector2.Zero,1f,SpriteEffects.None,layerDepth:1f);
             g.SpriteBatch.End();
             base.Draw(gameTime);
         }
@@ -223,7 +228,7 @@ namespace MAHKFinalProject.Scenes
                 }
                 else
                 {
-                    if ( frontNote._position.X < 80)
+                    if ( frontNote._position.X < 89)
                     {
                         SpawnedNotes.Dequeue();
 
