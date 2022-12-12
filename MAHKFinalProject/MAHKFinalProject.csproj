@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -9,8 +9,24 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>asteroid.ico</ApplicationIcon>
+    <Authors>MAHK</Authors>
+    <Company>MAHK</Company>
+    <Product>Rhythm</Product>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Maps\WF_Endgame.rdat" />
+    <None Remove="Maps\WF_FinalBattle.rdat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="asteroid.ico" />
+    <Content Include="Maps\WF_Endgame.rdat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Maps\WF_FinalBattle.rdat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
