@@ -61,6 +61,30 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/WF_EndgameBG.jpg
 
+#begin Backgrounds/WF_EndgameBG.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Backgrounds/WF_EndgameBG.jpg
+
+#begin Backgrounds/WF_FinalBattleBG.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Backgrounds/WF_FinalBattleBG.png
+
 #begin droplet.png
 /importer:TextureImporter
 /processor:TextureProcessor

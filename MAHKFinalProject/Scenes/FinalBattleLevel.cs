@@ -199,7 +199,6 @@ namespace MAHKFinalProject.Scenes
         {
             g.SpriteBatch.Begin();
             g.SpriteBatch.DrawString(_font,"Score : " + scoreManager.CurrentScore.ToString(),new Vector2(600, 30),Color.Bisque);
-            g.SpriteBatch.DrawString(_font, "Count : " + _loadedLevel.NoteList.Count.ToString(), new Vector2(600, 240), Color.Bisque);
 
 
 
@@ -312,6 +311,12 @@ namespace MAHKFinalProject.Scenes
                     }
                 }
 
+                if(_levelConductor.GetSongSeconds() > _loadedLevel.EventList[1])
+                {
+                    numOffreeZones = 3;
+                }
+
+
                 foreach (var zone in zones)
                 {
                     if(ks.IsKeyDown(zone.ZoneKey) && _oldKeyboardState.IsKeyUp(zone.ZoneKey))
@@ -338,6 +343,8 @@ namespace MAHKFinalProject.Scenes
                     }
                     ChangeZones();
                      _loadedLevel.NoteList.RemoveAt(0);
+
+             
                 }
 
 
@@ -356,11 +363,14 @@ namespace MAHKFinalProject.Scenes
                       
                         _loadedLevel.NoteList.RemoveAt(0);
                     }
-              
-             
 
 
-            
+            if (_loadedLevel.EventList[2] < _levelConductor.GetSongSeconds() && effectDelayInBeats != 0.5f)
+            {
+                effectDelayInBeats = 0.5f;
+            }
+
+
 
 
             base.Update(gameTime);
