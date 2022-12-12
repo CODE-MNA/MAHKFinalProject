@@ -34,7 +34,7 @@ namespace MAHKFinalProject.Scenes
             _laneTexture = g.Content.Load<Texture2D>("dropletLane");
             InitializeLanes();
             pulses = new List<Rectangle>();
-
+            effectOffset = 0.25f;
             for (int i = 0; i < 10; i++)
             {
                 for (int j = 0; j < 10; j++)
@@ -185,6 +185,23 @@ namespace MAHKFinalProject.Scenes
                 hitYLine = spawnpoint.Y + SharedVars.STAGE.Y - 160;
             
                 Droplet drop = new Droplet(g, dropTime, new Vector2(spawnpoint.X, spawnpoint.Y), new Vector2(spawnpoint.X, hitYLine), _levelConductor, this, laneForNewDrop);
+
+                if(MathF.Abs(dropTime - 16) < 0.5)
+                {
+                    drop.OnTapped = () =>
+                    {
+                        effectDelayInBeats = 1;
+                    };
+                }
+
+                if (MathF.Abs(dropTime - 35) < 0.5)
+                {
+                    drop.OnTapped = () =>
+                    {
+                        effectDelayInBeats = 0.5f;
+                        _bgColor = new Color(160, 10, 180);
+                    };
+                }
 
                 AssignTapHandlers(drop);
 

@@ -21,6 +21,20 @@ namespace MAHKFinalProject.GameComponents
         public float _bpm;
         Game1 g;
 
+        public bool OnBeat(float beatSignature, float offset)
+        {
+           
+                if(!HasStarted) return false;
+                if(GetCurrentBeat() + offset < beatSignature) return false;
+
+                if(((GetQuantizedBeat() + offset) % beatSignature)-offset  < 0.125f )
+                {
+                        return true;
+                }
+                return false;
+           
+        }
+
         public SyncMode Mode { get; set; } = SyncMode.Beats;
 
         public Conductor(Game game, string stageName, Song song, float bpm, SyncMode mode = SyncMode.Beats) : base(game)

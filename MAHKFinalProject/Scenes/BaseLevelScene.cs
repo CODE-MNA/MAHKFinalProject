@@ -37,6 +37,15 @@ namespace MAHKFinalProject.Scenes
         protected readonly int _perfectTapScore = 800;
 
         protected bool _verticalLevel = true;
+
+        public float effectDelayInBeats = 2;
+        protected float _bgAlpha;
+        protected bool flashing = false;
+     
+        protected float shakePower = 1f;
+        protected float effectOffset;
+        protected Color _bgColor;
+
         public BaseLevelScene(Game game,string levelName, int injectedBpm) : base(game)
         {
             g = (Game1)game;
@@ -44,13 +53,12 @@ namespace MAHKFinalProject.Scenes
             _levelFileHandler = new LevelFileHandler(new RythmSerializer());
             _font = g.GlobalFont;
 
-
-    
+         
             _levelName = levelName;
             _bpm = injectedBpm ;
             _song = g.Content.Load<Song>("Songs/" + _levelName + "Song");
 
-
+            _bgColor = Color.AntiqueWhite;
 
             scoreManager = new ScoreManager();
             _levelConductor = new Conductor(g, _levelName, _song, _bpm);
@@ -62,6 +70,11 @@ namespace MAHKFinalProject.Scenes
             //For each loaded beat level, read the floats and generate new points for it
 
             _loadedLevel = LoadBeatLevel();
+            OnLevelEnd += () =>
+            {
+                _bgColor = Color.Gray;
+                _bgAlpha = 0.08f;
+            };
 
             try
             {
@@ -80,7 +93,7 @@ namespace MAHKFinalProject.Scenes
         public override void Draw(GameTime gameTime)
         {
             g.SpriteBatch.Begin(SpriteSortMode.BackToFront);
-            if(bgLoaded) g.SpriteBatch.Draw(_bg, Vector2.Zero,_bgRect, Color.Wheat * 0.1f,0f,Vector2.Zero,1f,SpriteEffects.None,layerDepth:1f);
+            if(bgLoaded) g.SpriteBatch.Draw(_bg, Vector2.Zero,_bgRect, _bgColor * _bgAlpha,0f,Vector2.Zero,1f,SpriteEffects.None,layerDepth:1f);
             g.SpriteBatch.End();
             base.Draw(gameTime);
         }
@@ -89,7 +102,58 @@ namespace MAHKFinalProject.Scenes
         {
             if (levelEnded) return;
 
-            if(_loadedLevel.NoteList.Count <= 0 && SpawnedNotes.Count <= 0)
+            if (!flashing && _levelConductor.OnBeat(effectDelayInBeats,effectOffset))
+            {
+             
+                _bgRect.Inflate(shakePower, -shakePower);
+
+                
+                flashing = true;
+            }
+
+            if (flashing)
+            {
+              
+                 
+                if (_bgAlpha <= 0.55)
+                {
+                    _bgAlpha += 0.1f / effectDelayInBeats;
+
+                    
+                    
+                }
+                else
+                {
+                    _bgRect.Inflate(-shakePower, shakePower);
+
+
+                    //max
+                    _bgAlpha = 0.55f;
+                    flashing = false;
+                    
+                  
+                }
+                
+            }
+            else
+            {
+                if (_bgAlpha >= 0.1)
+                {
+                    //decreasing
+                    _bgAlpha -= 0.05f / effectDelayInBeats;
+
+                }
+                else
+                {
+                    //min 
+                    _bgAlpha = 0.1f;
+
+                }
+            }
+
+
+
+            if (_loadedLevel.NoteList.Count <= 0 && SpawnedNotes.Count <= 0)
             {
                 framesToEndGame--;
 
@@ -139,7 +203,7 @@ namespace MAHKFinalProject.Scenes
 
                 if (_verticalLevel)
                 {
-                    if (frontNote._position.Y > Helpers.SharedVars.STAGE.Y - 80)
+                    if (frontNote._position.Y > SharedVars.STAGE.Y - 80)
                     {
                         SpawnedNotes.Dequeue();
 

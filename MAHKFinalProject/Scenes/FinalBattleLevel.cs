@@ -25,7 +25,7 @@ namespace MAHKFinalProject.Scenes
         int nextZoneNote;
         float modeChangeTime;
 
-        private float DEFAULT_MODE_TIME = 6;
+        private float DEFAULT_MODE_TIME = 54;
 
         float hitXLine = 60;
         List<Droplet> dropBeatNotes = new List<Droplet>();
@@ -73,7 +73,7 @@ namespace MAHKFinalProject.Scenes
            _strumBarTexture = g.Content.Load<Texture2D>("dropletLane");
 
             modeChangeTime = DEFAULT_MODE_TIME;
-
+            
             if (_loadedLevel.EventList != null)
             {
 
@@ -202,7 +202,7 @@ namespace MAHKFinalProject.Scenes
             }
             else
             {
-                g.SpriteBatch.Draw(_strumBarTexture, new Rectangle(160, 0, 80, (int)STAGE.Y), Color.Azure);
+                g.SpriteBatch.Draw(_strumBarTexture, new Rectangle(180, 0, 80, (int)STAGE.Y), Color.Azure);
             }
 
             g.SpriteBatch.End();
@@ -216,7 +216,8 @@ namespace MAHKFinalProject.Scenes
 
             if(scoreManager.CurrentCombo < 5 && scoreManager.CurrentScore >=100)
             {
-                scoreManager.CurrentScore -= 300 / scoreManager.CurrentCombo;
+                
+                scoreManager.CurrentScore -= 300 / (scoreManager.CurrentCombo + 1);
                 if(scoreManager.CurrentScore < 0)
                 {
                     scoreManager.CurrentScore = 0;
@@ -295,7 +296,7 @@ namespace MAHKFinalProject.Scenes
 
                     if(_zoneWithPlayer.IsDangerous == false)
                     {
-                        scoreManager.CurrentScore += 800 + (scoreManager.CurrentCombo * 100);
+                        scoreManager.CurrentScore += 600 + (scoreManager.CurrentCombo * 100);
                         scoreManager.CurrentCombo++;
                     }
                     else
