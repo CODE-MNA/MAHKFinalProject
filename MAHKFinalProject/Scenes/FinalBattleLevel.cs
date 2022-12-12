@@ -340,6 +340,7 @@ namespace MAHKFinalProject.Scenes
                     else
                     {
                         scoreManager.CurrentCombo = 0;
+                        scoreManager.CurrentScore -= 40;
                     }
                     ChangeZones();
                      _loadedLevel.NoteList.RemoveAt(0);
