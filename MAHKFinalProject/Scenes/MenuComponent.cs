@@ -21,11 +21,14 @@ namespace MAHKFinalProject
         string[] menuItems;
         Vector2 _position;
         KeyboardState _oldState;
+        Game1 g;
 
+        string userstatus = "";
         public int SelectedIndex { get { return _selectedIndex; } }
 
         public MenuComponent(Game game, SpriteBatch spriteBatch, SpriteFont selected, SpriteFont notSelected, int selectedIndex, string[] menuItems) : base(game)
         {
+            g = Game as Game1;
             _spriteBatch = spriteBatch;
             _selected = selected;
             _notSelected = notSelected;
@@ -34,7 +37,16 @@ namespace MAHKFinalProject
             _selectedColor = Color.White;
             _notSelectedColor = Color.Gray;
             _position = new Vector2(SharedVars.STAGE.X/4, SharedVars.STAGE.Y/4);
+
+            g.authHandler.AuthStateChanged += () =>
+            {
+                userstatus = g.authHandler.GetLoggedInUserStatus();
+            };
+
+            g.authHandler.AuthStateChanged?.Invoke();
         }
+
+       
 
         public override void Draw(GameTime gameTime)
         {
@@ -54,7 +66,12 @@ namespace MAHKFinalProject
                     initPos.Y += _notSelected.LineSpacing;
                 }
             }
+
+            _spriteBatch.DrawString(_notSelected, userstatus, new Vector2(3, 3), Color.Azure);
+
             _spriteBatch.End();
+
+            
 
             base.Draw(gameTime);
         }

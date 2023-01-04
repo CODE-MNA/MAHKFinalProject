@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +14,24 @@ namespace MAHKFinalProject.Scenes
         private SpriteBatch _spriteBatch;
         private Texture2D _texture;
         private Vector2 _position;
-
+        Game1 g;
         public HelpScene(Game game) : base(game)
         {
-            Game1 g = (Game1)game;
+             g = (Game1)game;
             this._spriteBatch = g.SpriteBatch;
             this._texture = g.Content.Load<Texture2D>("Images/help");
             this._position = new Vector2(0, 0);
+
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Y))
+            {
+                g.authHandler.Logout();
+            }
+            base.Update(gameTime);
+        }
         public override void Draw(GameTime gameTime)
         {
             _spriteBatch.Begin();
@@ -31,5 +41,7 @@ namespace MAHKFinalProject.Scenes
 
             base.Draw(gameTime);
         }
+
+
     }
 }

@@ -1,3 +1,4 @@
+using MAHKFinalProject.Authentication;
 using MAHKFinalProject.Helpers;
 using MAHKFinalProject.Scenes;
 using Microsoft.Xna.Framework;
@@ -12,8 +13,8 @@ namespace MAHKFinalProject
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        
 
+        public AuthHandler authHandler;
         public SpriteBatch SpriteBatch { get { return _spriteBatch; } }
 
         public bool Paused;
@@ -44,6 +45,16 @@ namespace MAHKFinalProject
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
 
+            //Temp Auth
+            
+            authHandler = new AuthHandler();
+
+
+            authHandler.LoadAccessTokenFromStorage();
+
+           
+
+
             _graphics.ApplyChanges();
             IsMouseVisible = true;
         }
@@ -64,6 +75,7 @@ namespace MAHKFinalProject
             SharedVars.STAGE = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             base.Initialize();
         }
+
 
         protected override void LoadContent()
         {

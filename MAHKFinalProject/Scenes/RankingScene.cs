@@ -21,12 +21,18 @@ namespace MAHKFinalProject.Scenes
         private Rectangle _backgroundRect;
         private ScoreFileManager _scoreFileManager;
         private ScoreFileManager _level2ScoreFileManager;
+        Game1 g;
+        private ScoreAPIManager _scoreAPIManager;
+        
+
+        string[] LEVELS = new string[] { "Endgame", "Final_Battle" };
+
         private List<int> level1Scores;
         private List<int> level2Scores;
 
         public RankingScene(Game game) : base(game)
         {
-            Game1 g = (Game1)game;
+             g = (Game1)game;
             this._spriteBatch = g.SpriteBatch;
             this._position = new Vector2(SharedVars.STAGE.X / 3, SharedVars.STAGE.Y);
             this._headerFont = g.Content.Load<SpriteFont>("Fonts/hilightFont");
@@ -35,11 +41,16 @@ namespace MAHKFinalProject.Scenes
             this._velocity = new Vector2(0, 2.0f);
             this._backgroundRect = new Rectangle(0, 0, (int) SharedVars.STAGE.X, (int) SharedVars.STAGE.Y);
 
-            // get scores
+            // Legacy Score Handling
             _scoreFileManager = new ScoreFileManager("WF_Endgame");
             _level2ScoreFileManager = new ScoreFileManager("WF_FinalBattle");
             level1Scores = _scoreFileManager.getHighScores(5);
             level2Scores = _level2ScoreFileManager.getHighScores(5);
+
+
+            //New Score Handling
+            _scoreAPIManager = new ScoreAPIManager(g);
+
         }
 
         public override void Draw(GameTime gameTime)
@@ -52,13 +63,32 @@ namespace MAHKFinalProject.Scenes
             // background image
             _spriteBatch.Draw(_background, _backgroundRect, Color.White);
 
-          
 
-            if(level1Scores != null && level1Scores.Count > 0)
+            DrawScoresUsingAPI(initPos);
+           
+            _spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+
+
+        private void DrawScoresUsingAPI(Vector2 initPos)
+        {
+            string result = _scoreAPIManager.GetScoreData(LEVELS);
+
+            //{ key (Level Name) : [ ]
+            string token = g.authHandler.GetLoggedInToken();
+
+            _spriteBatch.DrawString(_spriteFont, result + "\n Token : " + token  , initPos, Color.Bisque);
+        }
+
+        private void OldDrawScoresUsingFileManager(Vector2 initPos)
+        {
+            if (level1Scores != null && level1Scores.Count > 0)
             {
                 // set score - from the file
-                
-                
+
+
                 _spriteBatch.DrawString(_headerFont, "Ranks For Level 1", initPos, Color.White);
                 initPos.Y += _spriteFont.LineSpacing * 2f;
 
@@ -72,7 +102,7 @@ namespace MAHKFinalProject.Scenes
             }
             else
             {
-                _spriteBatch.DrawString(_spriteFont,"No Scores for Level 1.", initPos,Color.Crimson);
+                _spriteBatch.DrawString(_spriteFont, "No Scores for Level 1.", initPos, Color.Crimson);
                 initPos.Y += _spriteFont.LineSpacing * 1.2f;
 
             }
@@ -100,9 +130,6 @@ namespace MAHKFinalProject.Scenes
                 initPos.Y += _spriteFont.LineSpacing * 1.2f;
 
             }
-            _spriteBatch.End();
-
-            base.Draw(gameTime);
         }
 
         public override void Update(GameTime gameTime)

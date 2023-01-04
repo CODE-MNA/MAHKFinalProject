@@ -27,5 +27,7 @@ namespace MAHKFinalProject.Scenes
             this.GameComponents.Add(_menuComponent);
         }
 
+        
+
     }
 }
