@@ -23,7 +23,11 @@ namespace MAHKFinalProject.Authentication
 
         public AuthHandler()
         {
-            client = new RestClient("http://localhost:8080/");
+            string? apiURL = Environment.GetEnvironmentVariable("API_URL");
+            if(apiURL == null){
+                apiURL = "http://localhost:8000";
+            }
+            client = new RestClient(apiURL);
             client.Options.UseDefaultCredentials = true;
 
 
